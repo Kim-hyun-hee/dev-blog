@@ -5,6 +5,7 @@ import satori from "satori";
 import sharp from "sharp";
 import { getFontPathByWeight } from "@/utils/getFontPathByWeight";
 import { getPostSlug } from "@/utils/getPostPaths";
+import { postFilter } from "@/utils/postFilter";
 import config from "@/config";
 
 export async function getStaticPaths() {
@@ -12,8 +13,11 @@ export async function getStaticPaths() {
     return [];
   }
 
+  // [CUSTOM] 업스트림은 !data.draft 만 봅니다. 그러면 예약 발행한 글의 OG
+  // 이미지가 글 페이지보다 먼저 생성되어, 공개 전 제목이 그려진 PNG가
+  // 예측 가능한 주소에 올라갑니다. 목록·상세·RSS와 같은 postFilter 를 씁니다.
   const posts = await getCollection("posts").then(p =>
-    p.filter(({ data }) => !data.draft && !data.ogImage)
+    p.filter(post => postFilter(post) && !post.data.ogImage)
   );
 
   return posts.map(post => ({
