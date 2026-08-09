@@ -1,0 +1,13 @@
+---
+title: "[테스트] Rendering 샘플 글 05"
+description: "페이지네이션 확인용 더미 글입니다. 실제 내용은 없습니다."
+pubDatetime: 2026-01-05T09:00:00+09:00
+category: deep-dive
+subcategory: rendering
+tags:
+  - 테스트
+---
+
+페이지네이션 동작을 확인하기 위한 더미 글 05번입니다.
+
+이 글은 테스트용이며 삭제해도 무방합니다.
