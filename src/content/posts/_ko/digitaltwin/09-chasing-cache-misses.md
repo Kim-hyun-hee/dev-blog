@@ -2,6 +2,8 @@
 title: "캐시 미스를 프로파일러로 잡기"
 description: "겉보기에 최적화가 끝난 뒤에도 남아 있던 접근 패턴 문제를 찾아낸 과정."
 pubDatetime: 2026-05-04T09:00:00+09:00
+category: deep-dive
+subcategory: memory
 series: dod-digitaltwin-unity
 seriesOrder: 9
 tags:

@@ -2,6 +2,8 @@
 title: "실시간 센서 값을 ECS로 흘려보내기"
 description: "외부에서 들어오는 초당 수천 건의 갱신을 메인 스레드를 막지 않고 반영하기."
 pubDatetime: 2026-04-20T09:00:00+09:00
+category: deep-dive
+subcategory: concurrency
 series: dod-digitaltwin-unity
 seriesOrder: 7
 tags:

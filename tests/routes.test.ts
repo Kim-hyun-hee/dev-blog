@@ -125,26 +125,33 @@ describe("카테고리 라우트", () => {
   });
 
   it("Deep Dive 테스트 글이 소분류별 개수와 페이지네이션을 채운다", () => {
+    // total은 소분류 전체 글 수, test는 그중 "[테스트]" 글 수다. 후자가
+    // 소분류마다 다른 것은 pagination-test/ 30편이 고르지 않게 섞여서다.
+    // 페이지가 늘어나도 견디도록 1쪽부터 없어질 때까지 모두 읽는다.
     const expected = {
-      rendering: 13,
-      architecture: 10,
-      memory: 10,
+      rendering: { total: 26, test: 20 },
+      architecture: { total: 34, test: 30 },
+      memory: { total: 11, test: 10 },
     } as const;
 
     for (const [subcategory, count] of Object.entries(expected)) {
-      const files = [
-        page("categories", "deep-dive", subcategory),
-        page("categories", "deep-dive", subcategory, "2"),
-      ];
+      const files = [page("categories", "deep-dive", subcategory)];
+      for (let n = 2; ; n++) {
+        const next = page("categories", "deep-dive", subcategory, String(n));
+        if (!existsSync(next)) break;
+        files.push(next);
+      }
       files.forEach(file => expect(existsSync(file), file).toBe(true));
+      // 페이지네이션이 실제로 쪼개졌는지 — 한 쪽에 다 담기면 의미가 없다.
+      expect(files.length, `${subcategory} 쪽수`).toBeGreaterThan(1);
       const html = files.map(readHtml).join("");
       const rows = [
         ...html.matchAll(/<li\b[^>]*data-post-row[^>]*>([\s\S]*?)<\/li>/g),
       ];
       const testRows = rows.filter(([, row]) => row.includes("[테스트]"));
 
-      expect(rows).toHaveLength(count);
-      expect(testRows).toHaveLength(10);
+      expect(rows).toHaveLength(count.total);
+      expect(testRows).toHaveLength(count.test);
       testRows.forEach(([, row]) => {
         expect(row).toContain("data-default-post-thumbnail");
         expect(row).toContain(`Deep Dive &gt; ${

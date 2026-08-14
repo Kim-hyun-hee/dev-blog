@@ -13,6 +13,7 @@ describe("CATEGORY_IDS", () => {
       "deep-dive",
       "troubleshooting",
       "study",
+      "devlog",
       "etc",
     ]);
   });
@@ -36,6 +37,7 @@ describe("getSubcategoryIds", () => {
       "rendering",
       "architecture",
       "memory",
+      "concurrency",
     ]);
   });
 

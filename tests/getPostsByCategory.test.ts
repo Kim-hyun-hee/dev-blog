@@ -48,6 +48,7 @@ describe("groupBySubcategory", () => {
       "rendering",
       "architecture",
       "memory",
+      "concurrency",
     ]);
   });
 

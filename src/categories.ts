@@ -8,11 +8,12 @@
 export const CATEGORIES = {
   "deep-dive": {
     label: "Deep Dive",
-    description: "렌더링·아키텍처·메모리를 파고든 기록",
+    description: "렌더링·아키텍처·메모리·동시성을 파고든 기록",
     subcategories: {
       rendering: "Rendering",
       architecture: "Architecture",
       memory: "Memory",
+      concurrency: "Concurrency",
     },
   },
   troubleshooting: {
@@ -28,6 +29,11 @@ export const CATEGORIES = {
       language: "Language",
       tools: "Tools & Framework",
     },
+  },
+  devlog: {
+    label: "Devlog",
+    description: "만드는 과정을 순서대로 남긴 기록",
+    subcategories: null,
   },
   etc: {
     label: "Etc",
