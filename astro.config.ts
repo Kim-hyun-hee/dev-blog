@@ -26,15 +26,27 @@ const isLegacyProjectRedirect = (page: string) => {
   return segments.at(-2) === "categories" && segments.at(-1) === "project";
 };
 
+/**
+ * 꺼진 기능의 페이지를 sitemap에서 뺀다. 정적 빌드에서 /archives/와 /about/은
+ * 404 화면을 담은 채로 생성되므로, 파일이 있다는 이유로 색인에 오르면 안 된다.
+ * /projects/는 showAbout이 꺼지면 아예 생성되지 않아 자연히 빠진다.
+ */
+const isDisabledPage = (page: string) => {
+  const { pathname } = new URL(page);
+
+  return (
+    (config.features?.showArchives === false &&
+      pathname.endsWith("/archives/")) ||
+    (config.features?.showAbout === false && pathname.endsWith("/about/"))
+  );
+};
+
 export default defineConfig({
   site: config.site.url,
   integrations: [
     mdx(),
     sitemap({
-      filter: page =>
-        (config.features?.showArchives !== false ||
-          !new URL(page).pathname.endsWith("/archives/")) &&
-        !isLegacyProjectRedirect(page),
+      filter: page => !isDisabledPage(page) && !isLegacyProjectRedirect(page),
     }),
   ],
   // [CUSTOM] 업스트림은 ["en"] / "en" 입니다. 기본 로케일만 ko로 바꿨고

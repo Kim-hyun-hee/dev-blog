@@ -83,18 +83,22 @@ const activeUtilLinkClass = "text-foreground";
     /* About은 글 분류가 아니라 프로필의 연장이라 정체성 묶음에 둔다.
       utilLinkClass의 px-2를 -ms-2로 상쇄해 위 텍스트와 좌측을 맞춘다. */
   }
-  <div class="-ms-2 mt-1">
-    <a
-      href={getRelativeLocaleUrl(locale, "about")}
-      class:list={[
-        utilLinkClass,
-        { [activeUtilLinkClass]: activeSegment === "about" },
-      ]}
-      aria-current={activeSegment === "about" ? "page" : undefined}
-    >
-      {t.nav.about}
-    </a>
-  </div>
+  {
+    features.showAbout && (
+      <div class="-ms-2 mt-1">
+        <a
+          href={getRelativeLocaleUrl(locale, "about")}
+          class:list={[
+            utilLinkClass,
+            { [activeUtilLinkClass]: activeSegment === "about" },
+          ]}
+          aria-current={activeSegment === "about" ? "page" : undefined}
+        >
+          {t.nav.about}
+        </a>
+      </div>
+    )
+  }
 
   <div class="mt-8">
     <SidebarNav

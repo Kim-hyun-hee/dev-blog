@@ -19,6 +19,13 @@ beforeAll(() => {
 const page = (...segments: string[]) =>
   join(DIST, ...segments, "index.html");
 
+/**
+ * showAbout이 꺼져 있으면 About은 404 화면이 되고 /projects/는 생성되지
+ * 않는다. 그 페이지를 읽는 검사는 읽을 것이 없으므로 건너뛴다 — 플래그를
+ * 끈 채로도 나머지 검사는 그대로 돌아야 한다.
+ */
+const aboutEnabled = siteConfig.features?.showAbout !== false;
+
 const projectRecords = () =>
   readdirSync(PROJECTS, { recursive: true, encoding: "utf8" })
     .filter(filename => /\.(?:md|mdx)$/i.test(filename))
@@ -321,6 +328,27 @@ describe("껍데기", () => {
   it("showArchives가 켜져 있으면 아카이브 링크가 있다", () => {
     expect(home()).toMatch(/href="[^"]*archives[^"]*"/);
   });
+
+  // 플래그를 어느 쪽으로 두든 통과해야 한다. 켜고 끄는 것이 목적인 설정이라
+  // 끈 상태에서 CI가 깨지면 쓸 수 없다.
+  it("showAbout이 About과 프로젝트 페이지를 함께 켜고 끈다", () => {
+    const project = page("projects", "01-dod-digital-twin");
+
+    // About은 꺼도 파일 자체는 남는다 — 내용이 404 화면으로 바뀔 뿐이다.
+    expect(existsSync(page("about"))).toBe(true);
+
+    if (aboutEnabled) {
+      expect(sidebar()).toMatch(/href="\/about\/"/);
+      expect(readFileSync(page("about"), "utf-8")).not.toContain(
+        "404 Not Found"
+      );
+      expect(existsSync(project)).toBe(true);
+    } else {
+      expect(sidebar()).not.toMatch(/href="\/about\/"/);
+      expect(readFileSync(page("about"), "utf-8")).toContain("404 Not Found");
+      expect(existsSync(project)).toBe(false);
+    }
+  });
 });
 
 describe("내부 링크", () => {
@@ -390,7 +418,7 @@ describe("About taxonomy links", () => {
   });
 });
 
-describe("프로젝트 상세 라우트", () => {
+describe.skipIf(!aboutEnabled)("프로젝트 상세 라우트", () => {
   const detail = (id: string) => readFileSync(page("projects", id), "utf-8");
 
   it("프로젝트마다 상세 페이지가 생성된다", () => {
@@ -438,7 +466,7 @@ describe("프로젝트 상세 라우트", () => {
   });
 });
 
-describe("About projects", () => {
+describe.skipIf(!aboutEnabled)("About projects", () => {
   const about = () => readFileSync(page("about"), "utf-8");
 
   it("카드마다 상세 페이지로 가는 링크가 하나씩 있다", () => {

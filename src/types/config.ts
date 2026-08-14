@@ -46,6 +46,14 @@ interface FeaturesConfig {
   dynamicOgImage?: boolean;
   /** Show the /archives page and link it in nav. Defaults to true. */
   showArchives?: boolean;
+  /**
+   * Show the /about page and link it in nav. Defaults to true.
+   *
+   * The project detail pages under /projects/ are reachable only from About,
+   * so turning this off drops them from the build too — otherwise they would
+   * stay published with nothing linking to them.
+   */
+  showAbout?: boolean;
   /** Show back button on post detail pages. Defaults to true. */
   showBackButton?: boolean;
   /**

@@ -1,5 +1,6 @@
 ---
 import { getCollection, getEntry, render } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Main from "@/components/Main.astro";
@@ -12,6 +13,15 @@ import { getAboutContactLinks } from "@/utils/getAboutContactLinks";
 import { groupProjects } from "@/utils/groupProjects";
 import { getSeriesPosts } from "@/utils/getSeriesPosts";
 import { postFilter } from "@/utils/postFilter";
+
+const locale = Astro.currentLocale ?? config.site.lang;
+
+// showArchives와 같은 방식. 정적 빌드에서는 페이지가 사라지는 게 아니라
+// 그 자리에 404 화면이 들어간다.
+const notFoundUrl = getRelativeLocaleUrl(locale, "404");
+if (!config.features.showAbout && notFoundUrl) {
+  return Astro.rewrite(notFoundUrl);
+}
 
 const about = await getEntry("pages", "about");
 
