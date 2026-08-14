@@ -162,11 +162,40 @@ Replace the default type label with any title you like by adding text after the 
 > [!NOTE] Did you know?
 > The text after the type becomes the callout's heading. Leave it out and the type name is used automatically.
 
+### Code blocks inside callouts
+
+Keep the `>` marker on every line, including the fences, and a code block works
+inside a callout like anywhere else — highlighting, the copy button, and the
+`file=` label all come along:
+
+> [!NOTE] Restart after editing taxonomy
+> Editing `src/categories.ts` or `src/series.ts` needs a dev server restart.
+> Otherwise the sidebar keeps showing stale counts.
+>
+> ```bash file="terminal"
+> corepack pnpm astro dev stop
+> ```
+>
+> ```bash
+> corepack pnpm dev
+> ```
+
+Inside a callout the frame is quieter than in body text: the traffic lights,
+the language badge and the drop shadow are dropped, and the header row survives
+only when you name the file. Body-level code blocks keep the full frame.
+
 ### Syntax summary
 
-```md
+````md
 > [!NOTE]
 > Supplementary information.
+
+> [!NOTE] With a code block
+> Keep `>` on the fence lines too.
+>
+> ```bash file="terminal"
+> corepack pnpm dev
+> ```
 
 > [!WARNING]- Collapsed by default
 > Hidden until expanded.
@@ -176,7 +205,7 @@ Replace the default type label with any title you like by adding text after the 
 
 > [!DANGER] Custom title
 > Replaces the default heading.
-```
+````
 
 ## Adding table of contents
 

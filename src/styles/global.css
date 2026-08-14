@@ -39,6 +39,35 @@
   margin-bottom: 0;
 }
 
+/* [CUSTOM] 콜아웃 안의 코드 블록은 조용하게.
+   본문용 mac 프레임(38px 크롬 바 + 신호등 + 언어 배지 + 그림자)이 콜아웃
+   상자 안에서 한 번 더 겹치면 상자 안의 상자가 된다. 장식만 걷고 파일명은
+   남긴다 — 파일명은 "어느 파일 이야기인가"를 알려주는 정보라 지우지 않는다.
+   본문의 일반 코드 블록은 그대로 둔다. */
+.callout .astro-code {
+  border-radius: 6px;
+  box-shadow: none;
+}
+
+.callout .astro-code::after {
+  content: none; /* 우측 상단 언어 배지 */
+}
+
+.callout .code-frame-light {
+  display: none; /* 신호등 3개 */
+}
+
+/* 파일명이 없으면 헤더 줄 자체가 필요 없다. */
+.callout .code-frame-header:not(:has(.code-frame-title)) {
+  display: none;
+}
+
+.callout .code-frame-header {
+  height: auto;
+  padding: 6px 12px;
+  background: transparent;
+}
+
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 @layer base {

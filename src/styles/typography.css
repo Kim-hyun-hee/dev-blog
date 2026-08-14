@@ -93,8 +93,15 @@
         @apply border-0 p-2;
       }
 
+      /* [CUSTOM] 업스트림은 아래 실선만 있었습니다. 머리와 몸의 배경이
+         같아 표가 한 덩어리로 보여서 헤더에 뮤트 배경을 깔았습니다.
+         한글 헤더라 대문자·자간 라벨은 쓰지 않습니다. */
+      thead {
+        @apply bg-muted;
+      }
+
       th {
-        @apply border-border border-b py-1.5;
+        @apply border-border border-b py-1.5 font-semibold;
       }
 
       tbody tr:not(:last-child) {
@@ -127,12 +134,20 @@
       }
     }
 
+    /* [CUSTOM] 업스트림은 bg-muted/75 에 p-1 뿐이었습니다. 사방 4px 여백이
+       본문 줄 사이에서 부풀어 보여, 테두리를 두른 칩 형태로 바꿨습니다.
+       좌우로만 여백을 주고 글자도 한 단계 줄입니다. */
     code {
-      @apply bg-muted/75 text-foreground rounded p-1 wrap-break-word before:content-none after:content-none;
+      @apply bg-muted text-foreground border-border rounded border wrap-break-word before:content-none after:content-none;
+      padding: 0.1em 0.35em;
+      font-size: 0.875em;
     }
 
+    /* 코드 블록 안쪽 <code>는 위 인라인 규칙을 물려받으므로 테두리와 여백을
+       되돌린다. 되돌리지 않으면 블록 안에 테두리가 한 겹 더 생긴다. */
     .astro-code code {
-      @apply flex-[1_0_100%] bg-inherit;
+      @apply flex-[1_0_100%] rounded-none border-0 bg-inherit;
+      font-size: inherit;
     }
 
     /* [CUSTOM] 업스트림은 좌측 선 + opacity-80 뿐이었습니다. opacity 를
