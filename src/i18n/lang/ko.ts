@@ -7,7 +7,7 @@ export default {
     tags: "Tags",
     about: "About",
     archives: "Archives",
-    search: "검색",
+    search: "Search",
     categories: "카테고리",
     series: "Series",
   },
@@ -41,13 +41,13 @@ export default {
     tagsTitle: "Tags",
     tagsDesc: "글에 사용된 모든 태그입니다.",
 
-    postsTitle: "글",
+    postsTitle: "Posts",
     postsDesc: "지금까지 쓴 글입니다.",
 
-    archivesTitle: "아카이브",
+    archivesTitle: "Archives",
     archivesDesc: "날짜별로 모아 본 글입니다.",
 
-    searchTitle: "검색",
+    searchTitle: "Search",
     searchDesc: "글 검색 ...",
   },
   category: {
@@ -57,7 +57,7 @@ export default {
     otherPosts: "'{{label}}' 카테고리의 다른 글",
   },
   series: {
-    title: "시리즈",
+    title: "Series",
     desc: "여러 편으로 이어지는 글입니다.",
     badge: "{{current}}/{{total}}편",
     ongoing: "연재 중",

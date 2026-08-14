@@ -46,7 +46,7 @@ describe("getSubcategoryIds", () => {
 
 describe("getSubcategoryLabel", () => {
   it("표시용 라벨을 반환한다", () => {
-    expect(getSubcategoryLabel("study", "cs")).toBe("CS 기초");
+    expect(getSubcategoryLabel("study", "cs")).toBe("CS");
   });
 
   it("없는 소분류에 undefined를 반환한다", () => {

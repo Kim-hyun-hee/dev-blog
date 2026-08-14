@@ -24,7 +24,7 @@ export const CATEGORIES = {
     label: "Study",
     description: "기초를 다시 훑는 기록",
     subcategories: {
-      cs: "CS 기초",
+      cs: "CS",
       language: "Language",
       tools: "Tools & Framework",
     },
