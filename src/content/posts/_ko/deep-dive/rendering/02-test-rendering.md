@@ -1,4 +1,5 @@
 ---
+fixture: true
 title: "[테스트] Rendering 예시 글 02"
 pubDatetime: 2026-08-09T09:00:00+09:00
 description: "Rendering 소분류 목록과 페이지네이션을 확인하기 위한 편집용 테스트 글 02입니다."

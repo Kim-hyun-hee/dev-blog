@@ -1,4 +1,5 @@
 ---
+fixture: true
 title: "LOD를 데이터로 다루기"
 description: "LOD Group 컴포넌트 대신 거리 하나로 단계를 정하는 방식으로 바꾼 이유."
 pubDatetime: 2026-04-13T09:00:00+09:00

@@ -1,4 +1,5 @@
 ---
+fixture: true
 title: "[테스트] Architecture 샘플 글 17"
 description: "페이지네이션 확인용 더미 글입니다. 실제 내용은 없습니다."
 pubDatetime: 2026-01-17T09:00:00+09:00

@@ -1,4 +1,5 @@
 ---
+fixture: true
 title: "DOTS와 ECS가 대신해주는 것"
 description: "ECS를 쓰면 왜 빨라지는지, 엔티티·컴포넌트·시스템이 각각 무엇을 맡는지 정리한다."
 pubDatetime: 2026-03-16T09:00:00+09:00

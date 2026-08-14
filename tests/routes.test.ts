@@ -5,6 +5,8 @@ import { CATEGORY_IDS, getSubcategoryIds } from "@/categories";
 import { SERIES_IDS } from "@/series";
 import { useTranslations } from "@/i18n";
 import { transformerFileName } from "../src/utils/transformers/fileName";
+import rehypeWrapTables from "../src/utils/rehypeWrapTables";
+import { renderMarkdown, specimens } from "./helpers/renderMarkdown";
 import siteConfig from "../astro-paper.config";
 
 const DIST = "dist";
@@ -132,7 +134,7 @@ describe("카테고리 라우트", () => {
     expect(existsSync(page("categories"))).toBe(true);
   });
 
-  it("Deep Dive 테스트 글이 소분류별 개수와 페이지네이션을 채운다", () => {
+  it("Deep Dive 픽스처가 소분류별 개수와 페이지네이션을 채운다", () => {
     // total은 소분류 전체 글 수, test는 그중 "[테스트]" 글 수다. 후자가
     // 소분류마다 다른 것은 pagination-test/ 30편이 고르지 않게 섞여서다.
     // 페이지가 늘어나도 견디도록 1쪽부터 없어질 때까지 모두 읽는다.
@@ -886,24 +888,13 @@ describe("dark site color tokens", () => {
 });
 
 describe("markdown elements", () => {
-  const specimen = () =>
-    readFileSync(
-      page("posts", "customizing-astropaper-theme-color-schemes"),
-      "utf-8"
-    );
-  const prose = (html: string) =>
-    html.match(/<article\b(?=[^>]*\bapp-prose\b)[^>]*>([\s\S]*?)<\/article>/)?.[1] ??
-    "";
-
-  it("keeps a rich Markdown specimen semantic while emitting the restrained prose styles", () => {
-    const html = specimen();
-    const article = prose(html);
+  it("keeps a rich Markdown specimen semantic while emitting the restrained prose styles", async () => {
+    const article = await renderMarkdown(specimens.prose);
     const css = builtStyles();
 
     expect(article).toMatch(/<h2\b[^>]*\bid="[^"]+"[^>]*>/);
     expect(article).toMatch(/<a\b[^>]*href="https?:\/\/[^\"]+"[^>]*>/);
     expect(article).toMatch(/<blockquote\b[^>]*>/);
-    expect(article).toMatch(/<div\b[^>]*\bdata-responsive-table[^>]*>/);
     expect(article).toMatch(/<table\b[^>]*>/);
     expect(article).not.toMatch(/\bheading-link\b/);
 
@@ -930,19 +921,12 @@ describe("markdown elements", () => {
     );
   });
 
-  it("wraps raw Markdown tables without changing native table display semantics", () => {
-    const defaultResponsive = prose(
-      readFileSync(page("posts", "how-to-configure-astropaper-theme"), "utf-8")
-    );
-    const rawMarkdown = prose(readFileSync(page("posts", "astro-paper-2"), "utf-8"));
+  it("wraps raw Markdown tables without changing native table display semantics", async () => {
+    const rawMarkdown = await renderMarkdown(specimens.prose);
     const css = builtStyles();
 
-    expect(defaultResponsive).toMatch(
-      /<div\b(?=[^>]*\bdata-responsive-table\b)[^>]*>[\s\S]*?<table\b/
-    );
-    expect(defaultResponsive).not.toMatch(/\bdata-markdown-table\b/);
     expect(rawMarkdown).toMatch(
-      /<div\b(?=[^>]*\bdata-markdown-table\b)[^>]*>\s*<table\b/
+      /<div\b(?=[^>]*\bdata-markdown-table\b)[^>]*>[\s\S]*?<table\b/
     );
     expect(rawMarkdown).not.toMatch(/\bdata-responsive-table\b/);
     expect(css).toMatch(
@@ -955,14 +939,34 @@ describe("markdown elements", () => {
       /\.app-prose(?:>| )table\{[^}]*(?:display:block|overflow-x:auto)/
     );
   });
+
+  it("leaves a table inside ResponsiveTable unwrapped", () => {
+    // <ResponsiveTable>은 MDX 컴포넌트라 마크다운 프로세서로는 렌더할 수
+    // 없다. 이중 래핑을 막는 분기는 rehypeWrapTables 안에 있으므로 트리를
+    // 직접 만들어 확인한다.
+    const table = { type: "element", tagName: "table", children: [] };
+    const tree = {
+      type: "root",
+      children: [
+        {
+          type: "mdxJsxFlowElement",
+          name: "ResponsiveTable",
+          children: [table],
+        },
+      ],
+    };
+
+    rehypeWrapTables()(tree);
+
+    expect(tree.children[0].children[0]).toBe(table);
+    expect(JSON.stringify(tree)).not.toContain("data-markdown-table"
+    );
+  });
 });
 
 describe("callouts", () => {
-  it("keeps plugin callout markup while applying centered local overrides", () => {
-    const html = readFileSync(
-      page("posts", "adding-new-posts-in-astropaper-theme"),
-      "utf-8"
-    );
+  it("keeps plugin callout markup while applying centered local overrides", async () => {
+    const html = await renderMarkdown(specimens.callouts);
     const css = builtStyles();
 
     expect(html).toMatch(
@@ -995,11 +999,8 @@ describe("callouts", () => {
 });
 
 describe("code blocks", () => {
-  it("keeps each frame header before its code and marks filename-less frames decorative", () => {
-    const html = readFileSync(
-      page("posts", "adding-new-posts-in-astropaper-theme"),
-      "utf-8"
-    );
+  it("keeps each frame header before its code and marks filename-less frames decorative", async () => {
+    const html = await renderMarkdown(specimens.code);
     const css = builtStyles();
     const codeBlock = (language: string) =>
       [...html.matchAll(/<pre\b[^>]*>[\s\S]*?<\/pre>/g)].find(block =>
@@ -1114,14 +1115,11 @@ describe("code blocks", () => {
     );
   });
 
-  it("reserves a clipped filename lane beside copy control at narrow widths", () => {
-    const html = readFileSync(
-      page("posts", "adding-new-posts-in-astropaper-theme"),
-      "utf-8"
-    );
+  it("reserves a clipped filename lane beside copy control at narrow widths", async () => {
+    const html = await renderMarkdown(specimens.code);
     const css = builtStyles();
 
-    expect(html).toContain("src/content/posts/sample-post.md");
+    expect(html).toContain("src/content.config.ts");
     expect(css).toMatch(
       /\.astro-code \.code-frame-title\{(?=[^}]*min-width:0)(?=[^}]*white-space:nowrap)(?=[^}]*overflow:hidden)(?=[^}]*text-overflow:ellipsis)/
     );

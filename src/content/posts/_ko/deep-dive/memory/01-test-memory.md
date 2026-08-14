@@ -1,4 +1,5 @@
 ---
+fixture: true
 title: "[테스트] Memory 예시 글 01"
 pubDatetime: 2026-07-21T09:00:00+09:00
 description: "Memory 소분류 목록과 페이지네이션을 확인하기 위한 편집용 테스트 글 01입니다."

@@ -17,7 +17,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:routes": "vitest run tests/routes.test.ts",
-    "verify": "pnpm build && pnpm test"
+    "verify": "pnpm build:fixtures && pnpm test",
+    "build:fixtures": "astro check && astro build --mode fixtures && pagefind --site dist && node scripts/copy-pagefind.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^7.0.0",

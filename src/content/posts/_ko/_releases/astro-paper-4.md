@@ -2,6 +2,7 @@
 category: etc
 author: Sat Naing
 pubDatetime: 2024-01-04T09:30:41.816Z
+fixture: true
 title: AstroPaper 4.0
 slug: "astro-paper-v4"
 featured: false

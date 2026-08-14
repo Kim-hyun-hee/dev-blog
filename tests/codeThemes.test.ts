@@ -1,8 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { createMarkdownProcessor } from "@astrojs/markdown-remark";
 import { horizonDark, horizonLight } from "../src/codeThemes";
+import { renderMarkdown, specimens } from "./helpers/renderMarkdown";
 
 type Theme = {
   settings: Array<{
@@ -143,16 +142,8 @@ Plain prose, with punctuation.
     );
   });
 
-  it("emits the Horizon backgrounds, foregrounds, and function colors in built code", () => {
-    const html = readFileSync(
-      join(
-        "dist",
-        "posts",
-        "adding-new-posts-in-astropaper-theme",
-        "index.html"
-      ),
-      "utf-8"
-    ).toLowerCase();
+  it("emits the Horizon backgrounds, foregrounds, and function colors in rendered code", async () => {
+    const html = (await renderMarkdown(specimens.code)).toLowerCase();
 
     for (const color of [
       "--shiki-light:#36373d",

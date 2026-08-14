@@ -1,6 +1,7 @@
 ---
 category: etc
 pubDatetime: 2026-05-17T07:15:45.792Z
+fixture: true
 title: AstroPaper 6.0
 slug: astro-paper-v6
 featured: true

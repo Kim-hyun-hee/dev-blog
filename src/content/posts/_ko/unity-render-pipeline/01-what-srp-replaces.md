@@ -1,4 +1,5 @@
 ---
+fixture: true
 title: "SRP는 무엇을 대신해주는가"
 description: "빌트인 파이프라인이 감춰두고 하던 일을 SRP는 C# 쪽으로 꺼내놓는다. 그 경계가 정확히 어디인지 짚는다."
 pubDatetime: 2026-05-25T09:00:00+09:00

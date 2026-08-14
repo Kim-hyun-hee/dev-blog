@@ -1,4 +1,5 @@
 ---
+fixture: true
 title: "SRP Batcher가 빠른 진짜 이유"
 description: "드로우콜을 합치는 게 아니다. 무엇을 줄이는 최적화인지 정확히 짚는다."
 pubDatetime: 2026-06-08T09:00:00+09:00

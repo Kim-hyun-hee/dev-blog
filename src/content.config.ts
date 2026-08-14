@@ -20,6 +20,10 @@ const posts = defineCollection({
         title: z.string(),
         featured: z.boolean().optional(),
         draft: z.boolean().optional(),
+        // [CUSTOM] 테마를 검사하기 위한 표본 글. draft와 뜻이 다르다 —
+        // draft는 "아직 안 쓴 글", fixture는 "테스트 데이터"다. 프로덕션
+        // 빌드에서만 빠지고 개발·검사 빌드에는 남는다. postFilter 참고.
+        fixture: z.boolean().optional(),
         tags: z.array(z.string()).default(["others"]),
         // [CUSTOM] category / subcategory / series / seriesOrder 네 필드.
         ...taxonomyFields,

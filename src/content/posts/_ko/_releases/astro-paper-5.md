@@ -1,6 +1,7 @@
 ---
 category: etc
 pubDatetime: 2025-03-08T08:18:19.693Z
+fixture: true
 title: AstroPaper 5.0
 slug: astro-paper-v5
 featured: false
