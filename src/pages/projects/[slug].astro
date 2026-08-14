@@ -120,7 +120,7 @@ const seriesPosts = series
             </h2>
             <a
               href={getRelativeLocaleUrl(locale, `series/${series}`)}
-              class="text-accent text-sm font-medium underline-offset-4 hover:underline"
+              class="text-accent hover:text-link-hover text-sm font-medium transition-colors"
             >
               {seriesMeta.label}{" "}
               {tplStr(t.series.count, {

@@ -62,7 +62,7 @@ const groups = hasSubcategories(category)
                     locale,
                     `categories/${category}/${group.id}`
                   )}
-                  class="decoration-accent underline-offset-4 hover:underline"
+                  class="hover:text-link transition-colors"
                 >
                   {getSubcategoryLabel(category, group.id)}
                 </a>
@@ -82,7 +82,7 @@ const groups = hasSubcategories(category)
                     locale,
                     `categories/${category}/${group.id}`
                   )}
-                  class="text-link decoration-accent text-sm underline-offset-4 hover:underline"
+                  class="text-link hover:text-link-hover text-sm transition-colors"
                 >
                   {t.category.seeMore}
                 </a>

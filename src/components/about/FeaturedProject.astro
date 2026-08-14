@@ -79,7 +79,7 @@ const detailHref = getRelativeLocaleUrl(locale, `projects/${project.id}`);
           data-project-series-link
           href={getRelativeLocaleUrl(locale, `series/${series}`)}
           aria-label={`${SERIES[series].label} 연재 ${seriesPostCount}편 보기`}
-          class="text-accent text-sm font-medium underline-offset-4 hover:underline"
+          class="text-accent hover:text-link-hover text-sm font-medium transition-colors"
         >
           관련 글 {seriesPostCount}편 보러가기 →
         </a>

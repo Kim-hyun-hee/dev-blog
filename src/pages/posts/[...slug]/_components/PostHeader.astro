@@ -36,7 +36,7 @@ const trail = category ? getCategoryTrail(category, subcategory) : [];
           {i > 0 && <span aria-hidden="true">›</span>}
           <a
             href={getRelativeLocaleUrl(locale, item.path)}
-            class="decoration-accent underline-offset-4 hover:underline"
+            class="hover:text-link transition-colors"
           >
             {item.label}
           </a>

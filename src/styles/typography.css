@@ -32,10 +32,31 @@
       @apply text-foreground;
     }
 
-    /* [CUSTOM] 업스트림은 `text-accent`였습니다. 링크 글씨는 본문 색을
-       그대로 물려받고 밑줄만 포인트 색을 씁니다. */
+    /* [CUSTOM] 업스트림은 `text-accent`였습니다.
+       한때 글씨를 본문색으로 두고 밑줄만 포인트 색으로 칠했는데, 그러면
+       링크임을 알리는 단서가 밑줄 하나뿐이라 밑줄을 진하게 칠할 수밖에
+       없었고 그게 시끄러웠습니다. 지금은 반대로 글씨에 --link 색을 주고
+       밑줄은 같은 색 30%로 낮춥니다. 밑줄을 아주 빼지 않는 이유는 문단
+       속에서 색만으로는 색각 이상 독자가 링크를 찾지 못하기 때문입니다. */
     a {
-      @apply decoration-accent focus-visible:outline-accent wrap-break-word text-inherit underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2;
+      @apply text-link focus-visible:outline-accent wrap-break-word underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2;
+      text-decoration-line: underline;
+      text-decoration-color: color-mix(in srgb, currentColor 30%, transparent);
+      text-decoration-thickness: 1px;
+      transition:
+        color 120ms ease,
+        text-decoration-color 120ms ease;
+    }
+
+    a:hover {
+      color: var(--link-hover);
+      text-decoration-color: currentColor;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      a {
+        transition: none;
+      }
     }
 
     ul {

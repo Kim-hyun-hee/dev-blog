@@ -55,7 +55,7 @@ const { prev, next } = getSeriesPosition(posts, seriesId, currentOrder);
             ) : (
               <a
                 href={getPostUrl(p.id, p.filePath, locale)}
-                class="underline-offset-4 hover:underline"
+                class="hover:text-link transition-colors"
               >
                 {p.data.title}
               </a>
@@ -69,7 +69,7 @@ const { prev, next } = getSeriesPosition(posts, seriesId, currentOrder);
           {prev ? (
             <a
               href={getPostUrl(prev.id, prev.filePath, locale)}
-              class="flex items-center gap-1 underline-offset-4 hover:underline"
+              class="hover:text-link flex items-center gap-1 transition-colors"
             >
               <IconArrowLeft class="size-4 shrink-0 rtl:rotate-180" />
               <span>{t.series.prevPart}</span>
@@ -80,7 +80,7 @@ const { prev, next } = getSeriesPosition(posts, seriesId, currentOrder);
           {next && (
             <a
               href={getPostUrl(next.id, next.filePath, locale)}
-              class="flex items-center gap-1 underline-offset-4 hover:underline"
+              class="hover:text-link flex items-center gap-1 transition-colors"
             >
               <span>{t.series.nextPart}</span>
               <IconArrowRight class="size-4 shrink-0 rtl:rotate-180" />

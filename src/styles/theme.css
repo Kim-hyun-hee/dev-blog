@@ -50,6 +50,7 @@
   --color-sky: var(--sky);
   --color-sky-muted: var(--sky-muted);
   --color-link: var(--link);
+  --color-link-hover: var(--link-hover);
   --color-quote-foreground: var(--quote-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
@@ -69,7 +70,8 @@
   --accent-muted: #f4f5fe;
   --sky: #8fb4dd;
   --sky-muted: #f4fbff;
-  --link: #404040;
+  --link: #6266c0;
+  --link-hover: #4b4e9e;
   --quote-foreground: #525252;
   --muted: #f5f5f5;
   --muted-foreground: #666666;
@@ -86,7 +88,8 @@
   --accent-muted: #302321;
   --sky: #efb993;
   --sky-muted: #302820;
-  --link: #d4d4d4;
+  --link: #e58d7d;
+  --link-hover: #f0a08f;
   --quote-foreground: #a3a3a3;
   --muted: #212121;
   --muted-foreground: #a3a3a3;

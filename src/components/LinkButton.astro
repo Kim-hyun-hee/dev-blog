@@ -21,8 +21,7 @@ const Button = disabled ? "span" : "a";
   class:list={[
     "group inline-flex items-center gap-1",
     {
-      "decoration-accent underline-offset-4 hover:underline":
-        variant === "default" && !disabled,
+      "hover:text-link transition-colors": variant === "default" && !disabled,
       "hover:bg-accent-muted hover:text-accent focus-visible:bg-accent-muted focus-visible:text-accent focus-visible:outline-accent rounded-md px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2":
         variant === "quiet" && !disabled,
     },

@@ -898,9 +898,19 @@ describe("markdown elements", () => {
     expect(article).toMatch(/<table\b[^>]*>/);
     expect(article).not.toMatch(/\bheading-link\b/);
 
+    // 링크는 글씨에 --link 색을 주고 밑줄은 같은 색 30%로 낮춘다. 예전에는
+    // 글씨가 본문색(color:inherit)이고 밑줄만 포인트 색이었다.
     expect(css).toMatch(
-      /\.app-prose a\{(?=[^}]*color:inherit)(?=[^}]*text-decoration-color:var\(--accent\))/
+      /\.app-prose a\{(?=[^}]*color:var\(--link\))(?=[^}]*text-underline-offset:4px)/
     );
+    expect(css).toMatch(/\.app-prose a\{[^}]*text-decoration-line:underline/);
+    expect(css).toMatch(
+      /text-decoration-color:color-mix\(in srgb, ?currentColor 30%, ?transparent\)/
+    );
+    expect(css).toMatch(
+      /\.app-prose a:hover\{(?=[^}]*color:var\(--link-hover\))(?=[^}]*text-decoration-color:currentColor)/
+    );
+    expect(css).not.toMatch(/\.app-prose a\{[^}]*color:inherit/);
     expect(css).toMatch(
       /\.app-prose a:focus-visible\{(?=[^}]*outline-width:2px)(?=[^}]*outline-color:var\(--accent\))/
     );

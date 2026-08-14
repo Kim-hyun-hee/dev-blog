@@ -32,7 +32,7 @@ const t = useTranslations(locale);
           <li>
             <a
               href={getPostUrl(p.id, p.filePath, locale)}
-              class="flex items-center justify-between gap-2 text-sm underline-offset-4 hover:underline"
+              class="hover:text-link flex items-center justify-between gap-2 text-sm transition-colors"
             >
               <span class="truncate">{p.data.title}</span>
               <IconArrowRight class="size-4 shrink-0" />

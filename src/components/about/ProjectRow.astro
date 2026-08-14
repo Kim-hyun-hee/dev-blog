@@ -65,7 +65,7 @@ const detailHref = getRelativeLocaleUrl(locale, `projects/${project.id}`);
             data-project-series-link
             href={getRelativeLocaleUrl(locale, `series/${series}`)}
             aria-label={`${SERIES[series].label} 연재 ${seriesPostCount}편 보기`}
-            class="text-accent font-medium underline-offset-4 hover:underline"
+            class="text-accent hover:text-link-hover font-medium transition-colors"
           >
             관련 글 {seriesPostCount}편 보러가기 →
           </a>
@@ -81,7 +81,7 @@ const detailHref = getRelativeLocaleUrl(locale, `projects/${project.id}`);
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`${title} 저장소 보기`}
-              class="decoration-accent underline-offset-4 hover:underline"
+              class="hover:text-link transition-colors"
             >
               Repository
             </a>
@@ -92,7 +92,7 @@ const detailHref = getRelativeLocaleUrl(locale, `projects/${project.id}`);
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`${title} 웹사이트 보기`}
-              class="decoration-accent underline-offset-4 hover:underline"
+              class="hover:text-link transition-colors"
             >
               Website
             </a>

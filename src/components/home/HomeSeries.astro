@@ -44,7 +44,7 @@ const seriesList = SERIES_IDS.map(id => ({
           <li class="border-border rounded-lg border p-4">
             <a
               href={getRelativeLocaleUrl(locale, `series/${s.id}`)}
-              class="text-foreground font-semibold underline-offset-4 hover:underline"
+              class="text-foreground hover:text-link font-semibold transition-colors"
             >
               {s.label}
             </a>
