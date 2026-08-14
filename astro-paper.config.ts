@@ -2,7 +2,7 @@ import { defineAstroPaperConfig } from "./src/types/config";
 
 export default defineAstroPaperConfig({
   site: {
-    url: "https://dev-groot-henna.vercel.app/",
+    url: "https://h1-groot.vercel.app/",
     title: "Dev groot",
     description: "Unity 그래픽스·DOD",
     // 사이트 전역에 노출되는 이름이라 브랜드명을 쓴다.
