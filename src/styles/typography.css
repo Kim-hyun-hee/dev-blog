@@ -164,11 +164,14 @@
       font-size: 0.875em;
     }
 
-    /* 코드 블록 안쪽 <code>는 위 인라인 규칙을 물려받으므로 테두리와 여백을
-       되돌린다. 되돌리지 않으면 블록 안에 테두리가 한 겹 더 생긴다. */
+    /* 코드 블록 안쪽 <code>는 위 인라인 규칙을 물려받으므로 테두리와 배경을
+       되돌린다. 되돌리지 않으면 블록 안에 테두리가 한 겹 더 생긴다.
+
+       font-size 는 여기서 건드리지 않는다. 이 선택자(.app-prose .astro-code
+       code)가 아래 .astro-code > code 보다 강해서, 여기서 크기를 정하면
+       블록의 글씨 크기를 덮어버린다. 크기는 한 곳에서만 정한다. */
     .astro-code code {
       @apply flex-[1_0_100%] rounded-none border-0 bg-inherit;
-      font-size: inherit;
     }
 
     /* [CUSTOM] 업스트림은 좌측 선 + opacity-80 뿐이었습니다. opacity 를
@@ -206,7 +209,7 @@
   .astro-code > code {
     @apply block max-h-[600px] overflow-auto;
     padding: 11px 13px 8px;
-    font-size: 13px;
+    font-size: 12px;
     line-height: 1.55;
     scrollbar-color: auto;
   }

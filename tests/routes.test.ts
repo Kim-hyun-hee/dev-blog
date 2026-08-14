@@ -1060,7 +1060,7 @@ describe("code blocks", () => {
       /\.astro-code\{[^}]*background-color:var\(--shiki-light-bg\)/
     );
     expect(css).toMatch(
-      /\.astro-code>code\{(?=[^}]*display:block)(?=[^}]*max-height:600px)(?=[^}]*padding:11px 13px 8px)(?=[^}]*font-size:13px)(?=[^}]*line-height:1\.55)(?=[^}]*overflow:auto)/
+      /\.astro-code>code\{(?=[^}]*display:block)(?=[^}]*max-height:600px)(?=[^}]*padding:11px 13px 8px)(?=[^}]*font-size:12px)(?=[^}]*line-height:1\.55)(?=[^}]*overflow:auto)/
     );
     expect(css).toMatch(
       /html\[data-theme=dark\] \.astro-code\{(?=[^}]*background-color:var\(--shiki-dark-bg\))/
