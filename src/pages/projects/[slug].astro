@@ -1,0 +1,163 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import type { GetStaticPaths } from "astro";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Main from "@/components/Main.astro";
+import Footer from "@/components/Footer.astro";
+import Datetime from "@/components/Datetime.astro";
+import { SERIES } from "@/series";
+import { getPostUrl } from "@/utils/getPostPaths";
+import { getSeriesPosts } from "@/utils/getSeriesPosts";
+import { postFilter } from "@/utils/postFilter";
+import { useTranslations, tplStr } from "@/i18n";
+import config from "@/config";
+
+export const getStaticPaths = (async () => {
+  const projects = await getCollection("projects");
+
+  return projects.map(project => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}) satisfies GetStaticPaths;
+
+type Props = { project: CollectionEntry<"projects"> };
+
+const { project } = Astro.props;
+const { title, summary, period, role, stack, repository, website, series } =
+  project.data;
+const { Content } = await render(project);
+
+const locale = Astro.currentLocale ?? config.site.lang;
+const t = useTranslations(locale);
+
+// 연재가 걸린 프로젝트에서만 글 목록을 계산한다. 편 순서로 정렬되고
+// 중복 순번 검증까지 끝난 목록이 온다.
+const seriesMeta = series ? SERIES[series] : undefined;
+const seriesPosts = series
+  ? getSeriesPosts((await getCollection("posts")).filter(postFilter), series)
+  : [];
+---
+
+<Layout title={`${title} | ${config.site.title}`} description={summary}>
+  <Header barTitle={title} />
+
+  <Main pageTitle={title} pageDesc={summary}>
+    <dl
+      data-project-meta
+      class="border-border mt-8 grid gap-3 border-y py-5 text-sm"
+    >
+      <div class="grid gap-1 sm:grid-cols-[5rem_minmax(0,1fr)]">
+        <dt class="text-muted-foreground">기간</dt>
+        <dd>{period}</dd>
+      </div>
+      <div class="grid gap-1 sm:grid-cols-[5rem_minmax(0,1fr)]">
+        <dt class="text-muted-foreground">역할</dt>
+        <dd>{role}</dd>
+      </div>
+      {
+        stack.length > 0 && (
+          <div class="grid gap-1 sm:grid-cols-[5rem_minmax(0,1fr)]">
+            <dt class="text-muted-foreground">스택</dt>
+            <dd>
+              <ul class="flex flex-wrap gap-2">
+                {stack.map(item => (
+                  <li class="bg-accent-muted text-accent rounded-full px-2.5 py-1 text-xs font-medium">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </dd>
+          </div>
+        )
+      }
+    </dl>
+
+    {
+      (repository || website) && (
+        <div class="mt-5 flex flex-wrap gap-2">
+          {repository && (
+            <a
+              href={repository}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="border-border hover:border-accent hover:text-accent rounded-md border px-3 py-2 text-sm font-medium transition-colors"
+            >
+              Repository
+            </a>
+          )}
+          {website && (
+            <a
+              href={website}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="border-border hover:border-accent hover:text-accent rounded-md border px-3 py-2 text-sm font-medium transition-colors"
+            >
+              Website
+            </a>
+          )}
+        </div>
+      )
+    }
+
+    <div data-project-body class="app-prose mt-10">
+      <Content />
+    </div>
+
+    {
+      series && seriesMeta && seriesPosts.length > 0 && (
+        <section aria-labelledby="project-series" class="mt-14">
+          <header class="border-border flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b pb-3">
+            <h2 id="project-series" class="text-xl font-semibold">
+              만든 과정
+            </h2>
+            <a
+              href={getRelativeLocaleUrl(locale, `series/${series}`)}
+              class="text-accent text-sm font-medium underline-offset-4 hover:underline"
+            >
+              {seriesMeta.label}{" "}
+              {tplStr(t.series.count, {
+                count: seriesPosts.length,
+              })}
+            </a>
+          </header>
+
+          <ol class="border-border border-b border-dashed">
+            {seriesPosts.map(post => (
+              <li
+                data-project-series-post
+                class="border-border border-t border-dashed first:border-t-0"
+              >
+                <a
+                  href={getPostUrl(post.id, post.filePath, locale)}
+                  class="hover:bg-accent/10 focus-visible:bg-accent/10 flex items-baseline gap-3 rounded px-2 py-3 transition-colors"
+                >
+                  <span
+                    class="text-accent w-6 shrink-0 text-sm font-semibold tabular-nums"
+                    aria-hidden="true"
+                  >
+                    {String(post.data.seriesOrder).padStart(2, "0")}
+                  </span>
+                  <span class="min-w-0 flex-1">
+                    <span class="text-foreground block">{post.data.title}</span>
+                    <span class="mt-1 block">
+                      <Datetime
+                        pubDatetime={post.data.pubDatetime}
+                        timezone={post.data.timezone}
+                        format="compact"
+                      />
+                    </span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )
+    }
+  </Main>
+
+  <Footer />
+</Layout>

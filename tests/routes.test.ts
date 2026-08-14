@@ -31,6 +31,7 @@ const projectRecords = () =>
         id: filename.replaceAll(sep, "/").replace(/\.(?:md|mdx)$/i, ""),
         featured: /^featured:\s*true\s*$/m.test(frontmatter),
         order: Number(frontmatter.match(/^order:\s*(\d+)\s*$/m)?.[1]),
+        series: frontmatter.match(/^series:\s*(\S+)\s*$/m)?.[1],
       };
     });
 
@@ -389,8 +390,79 @@ describe("About taxonomy links", () => {
   });
 });
 
+describe("프로젝트 상세 라우트", () => {
+  const detail = (id: string) => readFileSync(page("projects", id), "utf-8");
+
+  it("프로젝트마다 상세 페이지가 생성된다", () => {
+    const records = projectRecords();
+
+    expect(records.length).toBeGreaterThan(0);
+    for (const record of records) {
+      expect(existsSync(page("projects", record.id)), record.id).toBe(true);
+    }
+  });
+
+  it("상세 페이지가 제목과 메타데이터를 싣는다", () => {
+    for (const record of projectRecords()) {
+      const html = detail(record.id);
+
+      expect(html, record.id).toMatch(/<h1\b[^>]*>[\s\S]*?\S[\s\S]*?<\/h1>/);
+      expect(html, record.id).toContain("data-project-meta");
+      expect(html, record.id).toContain("data-project-body");
+    }
+  });
+
+  it("연재가 걸린 프로젝트만 그 시리즈 글 목록을 싣는다", () => {
+    const records = projectRecords();
+    // 사이드바에도 /series/ 링크가 있으므로 본문으로 좁힌다.
+    const body = (id: string) =>
+      detail(id).match(/<main\b[\s\S]*?<\/main>/)?.[0] ?? "";
+
+    expect(records.some(record => record.series)).toBe(true);
+    expect(records.some(record => !record.series)).toBe(true);
+
+    for (const record of records) {
+      const html = body(record.id);
+
+      expect(html, record.id).not.toBe("");
+      if (record.series) {
+        expect(html, record.id).toContain(`href="/series/${record.series}/"`);
+        // 목록이 실제로 글을 담고 있어야 한다 — 링크만 있고 비면 의미가 없다.
+        const rows = html.match(/data-project-series-post/g) ?? [];
+        expect(rows.length, record.id).toBeGreaterThan(0);
+      } else {
+        expect(html, record.id).not.toContain("data-project-series-post");
+        expect(html, record.id).not.toContain('href="/series/');
+      }
+    }
+  });
+});
+
 describe("About projects", () => {
   const about = () => readFileSync(page("about"), "utf-8");
+
+  it("카드마다 상세 페이지로 가는 링크가 하나씩 있다", () => {
+    const html = about();
+
+    for (const record of projectRecords()) {
+      const href = `href="/projects/${record.id}/"`;
+      expect(html.split(href), record.id).toHaveLength(2);
+    }
+  });
+
+  it("연재가 걸린 카드만 관련 글 링크를 갖는다", () => {
+    const html = about();
+    const section = html.slice(html.indexOf('<section id="projects"'));
+    const withSeries = projectRecords().filter(record => record.series);
+
+    expect(withSeries.length).toBeGreaterThan(0);
+    for (const record of withSeries) {
+      expect(section, record.id).toContain(`href="/series/${record.series}/"`);
+    }
+    expect(section.match(/data-project-series-link/g) ?? []).toHaveLength(
+      withSeries.length
+    );
+  });
 
   it("renders Markdown prose before the collection-backed projects section", () => {
     const html = about();

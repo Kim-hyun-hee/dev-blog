@@ -7,6 +7,7 @@ stack:
   - Astro
   - Tailwind CSS
   - TypeScript
+series: building-this-blog
 featured: true
 order: 2
 ---

@@ -5,6 +5,7 @@ import config from "@/config";
 // [CUSTOM] 업스트림에 없는 import. 분류 필드와 교차 검증은 전부
 // src/taxonomySchema.ts 에 있습니다.
 import { taxonomyFields, validateTaxonomy } from "@/taxonomySchema";
+import { SERIES_IDS } from "@/series";
 
 export const BLOG_PATH = "src/content/posts";
 
@@ -58,6 +59,9 @@ export const projectSchema = z.object({
   repository: httpUrl.optional(),
   website: httpUrl.optional(),
   order: z.number().int().nonnegative(),
+  // [CUSTOM] 그 프로젝트를 만든 과정을 적은 연재. 없는 프로젝트가 정상이므로
+  // optional이며, 값을 쓰면 SERIES에 있는 id만 통과한다.
+  series: z.enum(SERIES_IDS).optional(),
 });
 
 const projects = defineCollection({

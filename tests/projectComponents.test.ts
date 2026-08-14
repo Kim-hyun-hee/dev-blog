@@ -24,12 +24,25 @@ const project = (
 
 const render = async (
   Component: typeof FeaturedProject | typeof ProjectRow,
-  entry = project()
+  entry = project(),
+  seriesPostCount = 0
 ) => {
   const container = await AstroContainer.create();
 
-  return container.renderToString(Component, { props: { project: entry } });
+  return container.renderToString(Component, {
+    props: { project: entry, seriesPostCount },
+  });
 };
+
+/**
+ * 제목에 걸린 카드 전체 덮개 링크를 뺀 나머지 링크.
+ * 덮개는 카드마다 항상 있으므로 "URL이 있을 때만 생기는 링크"와 섞이면
+ * 검증이 무뎌진다.
+ */
+const actionLinks = (html: string) =>
+  [...html.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)].filter(
+    ([, attributes]) => !attributes.includes("project-cover")
+  );
 
 const expectProjectContent = (html: string) => {
   for (const value of [
@@ -53,7 +66,19 @@ describe.each([
     const html = await render(Component);
 
     expectProjectContent(html);
-    expect(html).toMatch(/<h3\b[^>]*>Controlled Project<\/h3>/);
+  });
+
+  it("turns the heading into the card-wide link to the detail page", async () => {
+    const html = await render(Component);
+    const heading = html.match(/<h3\b[^>]*>([\s\S]*?)<\/h3>/)?.[1] ?? "";
+
+    expect(heading).toContain('href="/projects/test-project/"');
+    expect(heading).toContain("Controlled Project");
+    // 덮개는 정확히 하나여야 한다 — 둘이면 카드 안에서 목적지가 갈린다.
+    // (컨테이너의 :has(a.project-cover:hover) 호버 클래스가 아니라 <a>만 센다)
+    expect(
+      html.match(/<a\b[^>]*\bclass="[^"]*\bproject-cover\b[^"]*"/g)
+    ).toHaveLength(1);
   });
 
   it("renders safe generic actions only for supplied optional URLs", async () => {
@@ -64,7 +89,7 @@ describe.each([
         website: "https://project.example.com",
       })
     );
-    const links = [...html.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)];
+    const links = actionLinks(html);
 
     expect(links.map(([, , label]) => label.trim())).toEqual([
       "Repository",
@@ -83,6 +108,21 @@ describe.each([
   });
 
   it("omits project actions when optional URLs are absent", async () => {
-    expect(await render(Component)).not.toMatch(/<a\b/);
+    expect(actionLinks(await render(Component))).toHaveLength(0);
+  });
+
+  it("links to the series only when the project has one with posts", async () => {
+    const entry = project({ series: "building-this-blog" });
+    const html = await render(Component, entry, 7);
+
+    expect(html).toContain("data-project-series-link");
+    expect(html).toContain('href="/series/building-this-blog/"');
+    expect(html).toContain("관련 글 7편 보러가기");
+
+    // 연재가 없거나 글이 아직 없으면 링크를 그리지 않는다.
+    expect(await render(Component)).not.toContain("data-project-series-link");
+    expect(await render(Component, entry, 0)).not.toContain(
+      "data-project-series-link"
+    );
   });
 });

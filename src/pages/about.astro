@@ -10,6 +10,8 @@ import ProjectRow from "@/components/about/ProjectRow.astro";
 import config from "@/config";
 import { getAboutContactLinks } from "@/utils/getAboutContactLinks";
 import { groupProjects } from "@/utils/groupProjects";
+import { getSeriesPosts } from "@/utils/getSeriesPosts";
+import { postFilter } from "@/utils/postFilter";
 
 const about = await getEntry("pages", "about");
 
@@ -23,6 +25,14 @@ const { Content } = await render(about);
 const projects = await getCollection("projects");
 const { featured, other } = groupProjects(projects);
 const { github, email } = getAboutContactLinks(config);
+
+// 카드에 "관련 글 N편"을 적으려면 편 수가 필요하다. 글 목록을 한 번만
+// 불러와 연재별로 세고, 카드는 숫자만 받는다.
+const allPosts = (await getCollection("posts")).filter(postFilter);
+const seriesPostCount = (project: (typeof projects)[number]) =>
+  project.data.series
+    ? getSeriesPosts(allPosts, project.data.series).length
+    : 0;
 ---
 
 <Layout
@@ -90,7 +100,10 @@ const { github, email } = getAboutContactLinks(config);
         featured.length > 0 && (
           <div class="mt-8 grid gap-4 sm:grid-cols-2">
             {featured.map(project => (
-              <FeaturedProject project={project} />
+              <FeaturedProject
+                project={project}
+                seriesPostCount={seriesPostCount(project)}
+              />
             ))}
           </div>
         )
@@ -103,7 +116,10 @@ const { github, email } = getAboutContactLinks(config);
             class="border-border mt-10 border-b"
           >
             {other.map(project => (
-              <ProjectRow project={project} />
+              <ProjectRow
+                project={project}
+                seriesPostCount={seriesPostCount(project)}
+              />
             ))}
           </ul>
         )
