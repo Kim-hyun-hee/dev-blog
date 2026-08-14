@@ -2,7 +2,7 @@ import { defineAstroPaperConfig } from "./src/types/config";
 
 export default defineAstroPaperConfig({
   site: {
-    url: "https://astro-paper.pages.dev/",
+    url: "https://dev-groot.vercel.app/",
     title: "Dev groot",
     description: "Unity 그래픽스·DOD",
     // 사이트 전역에 노출되는 이름이라 브랜드명을 쓴다.
@@ -25,7 +25,7 @@ export default defineAstroPaperConfig({
     lightAndDarkMode: true,
     dynamicOgImage: true,
     showArchives: true,
-    showAbout: true,
+    showAbout: false,
     showBackButton: true,
     search: "pagefind",
   },
