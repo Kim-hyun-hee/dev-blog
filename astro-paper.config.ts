@@ -11,6 +11,10 @@ export default defineAstroPaperConfig({
     author: "Dev groot",
     role: "Software Engineer",
     profile: "https://github.com/Kim-hyun-hee",
+    // 이 이름의 파일은 지금 public/ 에 없다. 없으면 /og.png 가 생성되어
+    // 쓰이므로(resolveDefaultOgImagePath 참고) 링크 미리보기는 사이트 설정을
+    // 그린 카드가 된다. 직접 만든 이미지를 쓰고 싶으면 이 이름으로 public/ 에
+    // 넣으면 그쪽이 우선한다.
     ogImage: "default-og.jpg",
     lang: "ko",
     timezone: "Asia/Seoul",

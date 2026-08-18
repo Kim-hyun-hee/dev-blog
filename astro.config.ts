@@ -108,10 +108,11 @@ export default defineConfig({
       fallbacks: ["monospace"],
       weights: [400, 500, 700],
       styles: ["normal", "italic"],
-      // "ttf" is included (in addition to the brief's "woff2") because the
-      // OG image routes (src/pages/og.png.ts, src/pages/posts/[...slug]/index.png.ts)
-      // render text via satori, which does not support WOFF2 font data.
-      formats: ["woff2", "ttf"],
+      // [CUSTOM] 한때 "ttf"를 함께 받았습니다. OG 이미지를 satori로 그릴 때
+      // 이 폰트를 썼고 satori가 WOFF2를 읽지 못했기 때문입니다. 지금 OG는
+      // 본문 폰트(SUIT)로 그리고 그쪽 ttf를 저장소에서 직접 읽으므로
+      // (src/utils/ogImage.ts), 여기서는 브라우저용 woff2만 받으면 됩니다.
+      formats: ["woff2"],
     },
   ],
   env: {

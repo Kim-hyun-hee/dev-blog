@@ -1,170 +1,25 @@
 import type { APIRoute } from "astro";
-import satori from "satori";
-import sharp from "sharp";
-import { fontData, experimental_getFontFileURL } from "astro:assets";
-import { getFontPathByWeight } from "@/utils/getFontPathByWeight";
+import { renderOgImage } from "@/utils/ogImage";
 import config from "@/config";
 
-export const GET: APIRoute = async context => {
-  // [CUSTOM] 업스트림은 "--font-google-sans-code"를 참조합니다. 폰트를 교체하며
-  // 이 파일에서 바뀐 것은 폰트 키와 fontFamily/name 문자열뿐입니다.
-  const fonts = fontData["--font-jetbrains-mono"];
-  const regularFontPath = getFontPathByWeight(fonts, 400);
-  const boldFontPath = getFontPathByWeight(fonts, 700);
+/**
+ * 사이트 링크 미리보기 이미지.
+ *
+ * public/{site.ogImage} 가 없을 때만 쓰인다(resolveDefaultOgImagePath 참고).
+ * 직접 만든 이미지를 그 자리에 두면 이 경로 대신 그 파일이 쓰인다.
+ *
+ * [CUSTOM] 업스트림은 이 파일 안에서 satori를 직접 부르고 크림색·검정 테두리
+ * 카드를 그렸습니다. 배치는 src/utils/ogImage.ts 로 옮겼고(글용과 같은 카드를
+ * 씁니다), 색과 폰트를 사이트의 것으로 바꿨습니다.
+ */
+export const GET: APIRoute = async () => {
+  const png = await renderOgImage({
+    title: config.site.title,
+    subtitle: config.site.description,
+    footerEnd: new URL(config.site.url).hostname,
+  });
 
-  if (regularFontPath === undefined || boldFontPath === undefined) {
-    throw new Error("Cannot find the font path.");
-  }
-
-  const [regularData, boldData] = await Promise.all([
-    fetch(experimental_getFontFileURL(regularFontPath, context.url)).then(res =>
-      res.arrayBuffer()
-    ),
-    fetch(experimental_getFontFileURL(boldFontPath, context.url)).then(res =>
-      res.arrayBuffer()
-    ),
-  ]);
-
-  const svg = await satori(
-    {
-      type: "div",
-      props: {
-        style: {
-          background: "#fefbfb",
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontFamily: "JetBrains Mono",
-        },
-        children: [
-          {
-            type: "div",
-            props: {
-              style: {
-                position: "absolute",
-                top: "-1px",
-                right: "-1px",
-                border: "4px solid #000",
-                background: "#ecebeb",
-                opacity: "0.9",
-                borderRadius: "4px",
-                display: "flex",
-                justifyContent: "center",
-                margin: "2.5rem",
-                width: "88%",
-                height: "80%",
-              },
-            },
-          },
-          {
-            type: "div",
-            props: {
-              style: {
-                border: "4px solid #000",
-                background: "#fefbfb",
-                borderRadius: "4px",
-                display: "flex",
-                justifyContent: "center",
-                margin: "2rem",
-                width: "88%",
-                height: "80%",
-              },
-              children: {
-                type: "div",
-                props: {
-                  style: {
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    margin: "20px",
-                    width: "90%",
-                    height: "90%",
-                  },
-                  children: [
-                    {
-                      type: "div",
-                      props: {
-                        style: {
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          height: "90%",
-                          maxHeight: "90%",
-                          overflow: "hidden",
-                          textAlign: "center",
-                        },
-                        children: [
-                          {
-                            type: "p",
-                            props: {
-                              style: { fontSize: 72, fontWeight: "bold" },
-                              children: config.site.title,
-                            },
-                          },
-                          {
-                            type: "p",
-                            props: {
-                              style: { fontSize: 28 },
-                              children: config.site.description,
-                            },
-                          },
-                        ],
-                      },
-                    },
-                    {
-                      type: "div",
-                      props: {
-                        style: {
-                          display: "flex",
-                          justifyContent: "flex-end",
-                          width: "100%",
-                          marginBottom: "8px",
-                          fontSize: 28,
-                        },
-                        children: {
-                          type: "span",
-                          props: {
-                            style: { overflow: "hidden", fontWeight: "bold" },
-                            children: new URL(config.site.url).hostname,
-                          },
-                        },
-                      },
-                    },
-                  ],
-                },
-              },
-            },
-          },
-        ],
-      },
-    },
-    {
-      width: 1200,
-      height: 630,
-      embedFont: true,
-      fonts: [
-        {
-          name: "JetBrains Mono",
-          data: regularData,
-          weight: 400,
-          style: "normal",
-        },
-        {
-          name: "JetBrains Mono",
-          data: boldData,
-          weight: 700,
-          style: "normal",
-        },
-      ],
-    }
-  );
-
-  const pngBuffer = await sharp(Buffer.from(svg)).png().toBuffer();
-
-  return new Response(new Uint8Array(pngBuffer), {
+  return new Response(new Uint8Array(png), {
     headers: { "Content-Type": "image/png" },
   });
 };
