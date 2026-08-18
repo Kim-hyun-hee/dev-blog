@@ -31,39 +31,39 @@ main {
   --color-accent-muted: rgb(229 141 125 / 40%);
   --color-accent-subtle: #302321;
 
-  /* 보조 버튼 */
-  --color-btn-text: #e5e5e5;
+  /* 보조 버튼. light.css 와 같은 문법이고 색만 다크 값입니다. */
+  --color-btn-text: #a3a3a3;
   --color-btn-bg: #212121;
   --color-btn-border: #333333;
   --color-btn-shadow: 0 0 transparent;
   --color-btn-inset-shadow: 0 0 transparent;
-  --color-btn-hover-bg: #2a2a2a;
-  --color-btn-hover-border: #404040;
-  --color-btn-active-bg: #333333;
-  --color-btn-active-border: #404040;
-  --color-btn-selected-bg: #2a2a2a;
+  --color-btn-hover-bg: #302321;
+  --color-btn-hover-border: #4a3531;
+  --color-btn-active-bg: #3d2c29;
+  --color-btn-active-border: #5c423c;
+  --color-btn-selected-bg: #302321;
 
-  /* 댓글 등록 버튼. 글자색은 theme.css 의 다크 --accent-foreground 입니다. */
-  --color-btn-primary-text: #1c1e26;
-  --color-btn-primary-bg: #e58d7d;
-  --color-btn-primary-border: transparent;
+  /* 댓글 등록 버튼. 포인트 색을 꽉 채우지 않는 이유는 light.css 주석 참고. */
+  --color-btn-primary-text: #e58d7d;
+  --color-btn-primary-bg: #302321;
+  --color-btn-primary-border: #e58d7d;
   --color-btn-primary-shadow: 0 0 transparent;
   --color-btn-primary-inset-shadow: 0 0 transparent;
-  --color-btn-primary-hover-bg: #f0a08f;
-  --color-btn-primary-hover-border: transparent;
-  --color-btn-primary-selected-bg: #d97c6b;
+  --color-btn-primary-hover-bg: #3d2c29;
+  --color-btn-primary-hover-border: #f0a08f;
+  --color-btn-primary-selected-bg: #4a3531;
   --color-btn-primary-selected-shadow: 0 0 transparent;
-  --color-btn-primary-disabled-text: #a3a3a3;
-  --color-btn-primary-disabled-bg: #4a3531;
-  --color-btn-primary-disabled-border: transparent;
+  --color-btn-primary-disabled-text: #7a5a52;
+  --color-btn-primary-disabled-bg: #241b1a;
+  --color-btn-primary-disabled-border: #3d2c29;
 
   /* 정렬 토글, 목록 항목, 반응 버튼 */
   --color-segmented-control-bg: #212121;
   --color-segmented-control-button-bg: #171717;
   --color-segmented-control-button-selected-border: #e58d7d;
-  --color-action-list-item-default-hover-bg: #212121;
-  --color-social-reaction-bg-hover: #212121;
-  --color-social-reaction-bg-reacted-hover: #302321;
+  --color-action-list-item-default-hover-bg: #302321;
+  --color-social-reaction-bg-hover: #302321;
+  --color-social-reaction-bg-reacted-hover: #3d2c29;
 
   --color-primer-shadow-inset: 0 0 transparent;
 
@@ -85,6 +85,33 @@ main .pagination-loader-container {
   background-image: url("https://github.com/images/modules/pulls/progressive-disclosure-line-dark.svg");
 }
 
+/* 밑줄과 hover — 이유는 light.css 주석 참고. */
+main a {
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, currentColor 30%, transparent);
+}
+
+main a:hover {
+  text-decoration-color: currentColor;
+}
+
+main a,
+main button {
+  transition:
+    color 120ms ease,
+    background-color 120ms ease,
+    border-color 120ms ease,
+    text-decoration-color 120ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  main a,
+  main button {
+    transition: none;
+  }
+}
+
 .gsc-header {
   padding-bottom: 1rem;
 }
@@ -95,4 +122,5 @@ main .pagination-loader-container {
 
 .gsc-comment-box {
   border-radius: 0.5rem;
+  background-color: #212121;
 }

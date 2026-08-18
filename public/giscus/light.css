@@ -39,41 +39,43 @@ main {
   --color-accent-muted: rgb(131 135 211 / 40%);
   --color-accent-subtle: #f4f5fe;
 
-  /* 보조 버튼 */
-  --color-btn-text: #262626;
+  /* 보조 버튼. 태그 칩(Tag.astro)의 문법을 따릅니다 — 회색 판에 흐린 글씨로
+     두고, hover에서 포인트 틴트를 깔면서 글씨를 진하게 올립니다. */
+  --color-btn-text: #666666;
   --color-btn-bg: #f5f5f5;
   --color-btn-border: #e5e5e5;
   --color-btn-shadow: 0 0 transparent;
   --color-btn-inset-shadow: 0 0 transparent;
-  --color-btn-hover-bg: #ebebeb;
-  --color-btn-hover-border: #d4d4d4;
-  --color-btn-active-bg: #e0e0e0;
-  --color-btn-active-border: #d4d4d4;
-  --color-btn-selected-bg: #ebebeb;
+  --color-btn-hover-bg: #f4f5fe;
+  --color-btn-hover-border: #dcdef7;
+  --color-btn-active-bg: #e9eafc;
+  --color-btn-active-border: #c9cbee;
+  --color-btn-selected-bg: #f4f5fe;
 
-  /* 댓글 등록 버튼. 원본의 #1f883d 초록이 파랑 다음으로 큰 이질감이었습니다.
-     글자색은 theme.css 의 --accent-foreground 입니다. 포인트 색 위에 얹는
-     글자색이라 짝으로 검토된 값이고, 흰 글자보다 대비가 높습니다. */
-  --color-btn-primary-text: #262626;
-  --color-btn-primary-bg: #8387d3;
-  --color-btn-primary-border: transparent;
+  /* 댓글 등록 버튼. 원본은 #1f883d 초록을 꽉 채웁니다.
+     포인트 색을 판 전체에 칠하지 않습니다 — theme.css 의 원칙대로 포인트는
+     "표시"에만 씁니다. 옅은 틴트 바탕에 포인트 색 글씨와 테두리로 두면 글씨와
+     바탕이 같은 색 계열이라 서로 부딪히지 않으면서도 주목도가 남습니다. */
+  --color-btn-primary-text: #6266c0;
+  --color-btn-primary-bg: #f4f5fe;
+  --color-btn-primary-border: #8387d3;
   --color-btn-primary-shadow: 0 0 transparent;
   --color-btn-primary-inset-shadow: 0 0 transparent;
-  --color-btn-primary-hover-bg: #6266c0;
-  --color-btn-primary-hover-border: transparent;
-  --color-btn-primary-selected-bg: #4b4e9e;
+  --color-btn-primary-hover-bg: #e9eafc;
+  --color-btn-primary-hover-border: #6266c0;
+  --color-btn-primary-selected-bg: #dcdef7;
   --color-btn-primary-selected-shadow: 0 0 transparent;
-  --color-btn-primary-disabled-text: #737373;
-  --color-btn-primary-disabled-bg: #e3e4f6;
-  --color-btn-primary-disabled-border: transparent;
+  --color-btn-primary-disabled-text: #a5a7d8;
+  --color-btn-primary-disabled-bg: #fafaff;
+  --color-btn-primary-disabled-border: #e9eafc;
 
-  /* 정렬 토글, 목록 항목, 반응 버튼 */
+  /* 정렬 토글, 목록 항목, 반응 버튼. hover 틴트는 위 버튼과 같은 색입니다. */
   --color-segmented-control-bg: #f5f5f5;
   --color-segmented-control-button-bg: #ffffff;
   --color-segmented-control-button-selected-border: #8387d3;
-  --color-action-list-item-default-hover-bg: #f5f5f5;
-  --color-social-reaction-bg-hover: #f5f5f5;
-  --color-social-reaction-bg-reacted-hover: #f4f5fe;
+  --color-action-list-item-default-hover-bg: #f4f5fe;
+  --color-social-reaction-bg-hover: #f4f5fe;
+  --color-social-reaction-bg-reacted-hover: #e9eafc;
 
   --color-primer-shadow-inset: 0 0 transparent;
 
@@ -89,6 +91,41 @@ main pre {
   font-family: "JetBrains Mono", ui-monospace, monospace;
 }
 
+/* 밑줄. 원본은 브라우저 기본값이라 두껍고 진하고 글자에 붙어 있습니다.
+   typography.css 의 본문 링크와 같은 처리로 맞춥니다 — 1px, 글자색의 30%,
+   4px 띄움, hover에서 제 색을 찾습니다.
+
+   text-decoration-line 은 건드리지 않습니다. giscus에는 밑줄이 없어야 하는
+   링크(작성자 이름, 시각, 버튼처럼 생긴 링크)가 섞여 있는데, 여기서 밑줄을
+   켜면 그것들에까지 그어집니다. */
+main a {
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, currentColor 30%, transparent);
+}
+
+main a:hover {
+  text-decoration-color: currentColor;
+}
+
+/* hover가 즉시 튀지 않게. 사이트의 transition-colors 와 같은 120ms 입니다.
+   요소 선택자만 써서 giscus의 클래스 이름에 기대지 않습니다. */
+main a,
+main button {
+  transition:
+    color 120ms ease,
+    background-color 120ms ease,
+    border-color 120ms ease,
+    text-decoration-color 120ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  main a,
+  main button {
+    transition: none;
+  }
+}
+
 /* 여백과 모서리 — 본문 리듬에 맞춥니다. 아래 선택자는 giscus가 실제로 쓰는
    것만 씁니다(styles/themes/custom_example.css 기준). */
 .gsc-header {
@@ -99,6 +136,9 @@ main pre {
   gap: 0.5rem;
 }
 
+/* 본문의 다른 상자들처럼 옅은 판 위에 올립니다. 배경이 흰색 하나뿐이면
+   입력창이 페이지에 녹아 경계가 사라집니다. */
 .gsc-comment-box {
   border-radius: 0.5rem;
+  background-color: #f5f5f5;
 }
