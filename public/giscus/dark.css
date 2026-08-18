@@ -120,7 +120,7 @@ main button {
   gap: 0.5rem;
 }
 
+/* 바탕을 칠하지 않고 테두리로만 구분합니다 — 이유는 light.css 주석 참고. */
 .gsc-comment-box {
   border-radius: 0.5rem;
-  background-color: #212121;
 }
