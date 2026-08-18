@@ -15,6 +15,9 @@ export default defineAstroPaperConfig({
     lang: "ko",
     timezone: "Asia/Seoul",
     dir: "ltr",
+    // 측정 ID는 HTML에 그대로 실려 나가는 공개 값이라 여기 둔다. 숨겨야 하는
+    // 것은 숫자를 되읽는 쪽의 서비스 계정 키인데, 그건 이 저장소에 없다.
+    gaMeasurementId: "G-62Q2SHFLE8",
   },
   posts: {
     perPage: 8,
