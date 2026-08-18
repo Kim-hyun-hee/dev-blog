@@ -40,6 +40,12 @@ const config: ResolvedAstroPaperConfig = {
     search: userConfig.features?.search ?? "pagefind",
   },
   socials: userConfig.socials ?? [],
+  comments: userConfig.comments && {
+    ...userConfig.comments,
+    mapping: userConfig.comments.mapping ?? "pathname",
+    reactionsEnabled: userConfig.comments.reactionsEnabled ?? true,
+    lang: userConfig.comments.lang ?? userConfig.site.lang ?? "en",
+  },
 };
 
 export default config;

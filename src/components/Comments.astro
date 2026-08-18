@@ -1,0 +1,36 @@
+---
+/**
+ * [CUSTOM] 업스트림에 없는 컴포넌트입니다.
+ *
+ * giscus 댓글이 들어갈 빈 컨테이너. 설정은 data-* 속성으로 실어 보내고, 실제
+ * 주입과 테마 동기화는 src/scripts/comments.ts 가 합니다. 왜 스크립트 태그를
+ * 여기 직접 두지 않는지도 그 파일에 적혀 있습니다.
+ *
+ * 설정이 없으면 아무것도 렌더하지 않습니다.
+ */
+import config from "@/config";
+import { useTranslations } from "@/i18n";
+
+const comments = config.comments;
+const t = useTranslations(Astro.currentLocale ?? config.site.lang);
+---
+
+{
+  comments && (
+    <section class="mt-10" aria-label={t.comments.title}>
+      <div
+        id="comments"
+        data-repo={comments.repo}
+        data-repo-id={comments.repoId}
+        data-category={comments.category}
+        data-category-id={comments.categoryId}
+        data-mapping={comments.mapping}
+        data-strict="0"
+        data-reactions-enabled={comments.reactionsEnabled ? "1" : "0"}
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-lang={comments.lang}
+      />
+    </section>
+  )
+}

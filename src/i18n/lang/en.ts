@@ -89,6 +89,9 @@ export default {
   toc: {
     title: "Table of contents",
   },
+  comments: {
+    title: "Comments",
+  },
   notFound: {
     title: "404 Not Found",
     message: "Page Not Found",

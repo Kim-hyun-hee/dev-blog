@@ -35,4 +35,12 @@ export default defineAstroPaperConfig({
   socials: [
     { name: "github",   url: "https://github.com/Kim-hyun-hee" },
   ],
+  // 댓글은 블로그 저장소(dev-blog)의 Discussions에 쌓인다. 아래 값은 모두
+  // 페이지 HTML에 실려 나가는 공개 값이라 감출 이유가 없다.
+  comments: {
+    repo: "Kim-hyun-hee/dev-blog",
+    repoId: "R_kgDOTy_HQQ",
+    category: "Comments",
+    categoryId: "DIC_kwDOTy_HQc4DDnCa",
+  },
 });

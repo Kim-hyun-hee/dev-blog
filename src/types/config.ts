@@ -86,12 +86,41 @@ interface SocialLink {
   linkTitle?: string;
 }
 
+/**
+ * giscus comments on post pages. Every value here is public — it ships in the
+ * page HTML — so it belongs in the config file rather than an env var. Get the
+ * IDs from giscus.app after enabling Discussions on the repository.
+ *
+ * Omit the whole block to turn comments off.
+ */
+interface CommentsConfig {
+  /** "owner/name" of the public repo holding the discussions */
+  repo: string;
+  /** Repository node ID, e.g. "R_kgDO..." */
+  repoId: string;
+  /** Discussion category name, e.g. "Comments" */
+  category: string;
+  /** Category node ID, e.g. "DIC_kwDO..." */
+  categoryId: string;
+  /**
+   * How a page is matched to its discussion. "pathname" survives title edits;
+   * changing a post's URL is what orphans its comments.
+   */
+  mapping?: "pathname" | "url" | "title" | "og:title";
+  /** Show the reaction bar above the comment box. Defaults to true. */
+  reactionsEnabled?: boolean;
+  /** giscus UI language. Defaults to the site language. */
+  lang?: string;
+}
+
 interface AstroPaperConfig {
   site: SiteConfig;
   posts?: PostsConfig;
   features?: FeaturesConfig;
   /** Social profile links shown in header/footer */
   socials?: SocialLink[];
+  /** giscus comments. Omit to disable. */
+  comments?: CommentsConfig;
 }
 
 type ResolvedSiteConfig = Required<
@@ -112,11 +141,15 @@ type ResolvedSiteConfig = Required<
     "role" | "profile" | "googleVerification" | "gaMeasurementId"
   >;
 
+type ResolvedCommentsConfig = Required<CommentsConfig>;
+
 export interface ResolvedAstroPaperConfig {
   site: ResolvedSiteConfig;
   posts: Required<PostsConfig>;
   features: Required<FeaturesConfig>;
   socials: SocialLink[];
+  /** Undefined when comments are turned off. */
+  comments?: ResolvedCommentsConfig;
 }
 
 /**

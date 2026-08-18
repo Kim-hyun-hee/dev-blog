@@ -76,6 +76,9 @@ export default {
   toc: {
     title: "목차",
   },
+  comments: {
+    title: "댓글",
+  },
   a11y: {
     skipToContent: "본문으로 건너뛰기",
     openMenu: "메뉴 열기",

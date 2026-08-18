@@ -90,6 +90,9 @@ export interface UIStrings {
   toc: {
     title: string;
   };
+  comments: {
+    title: string;
+  };
   notFound: {
     title: string;
     message: string;
