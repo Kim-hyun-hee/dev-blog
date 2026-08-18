@@ -33,11 +33,19 @@ const FORWARDED_ATTRIBUTES = [
   "data-lang",
 ];
 
-/** theme.ts가 <html>에 써 둔 값을 읽는다. */
-export function currentTheme(): "light" | "dark" {
-  return document.documentElement.getAttribute("data-theme") === "dark"
-    ? "dark"
-    : "light";
+/**
+ * theme.ts가 <html>에 써 둔 값을 읽어, 그에 해당하는 giscus 테마를 고른다.
+ *
+ * giscus는 프리셋 이름과 CSS 파일 URL을 모두 받는다. 컨테이너가 URL을 실어
+ * 오면 그걸 쓰고, 없으면 프리셋 이름으로 떨어진다 — 테마 파일이 아직 배포되지
+ * 않았거나 설정이 빠졌을 때 댓글창이 통째로 사라지는 것보다 낫다.
+ */
+export function currentTheme(container: Element): string {
+  const dark = document.documentElement.getAttribute("data-theme") === "dark";
+  const url = container.getAttribute(
+    dark ? "data-theme-dark" : "data-theme-light"
+  );
+  return url ?? (dark ? "dark" : "light");
 }
 
 export function mountGiscus(container: Element, theme: string): void {
@@ -76,9 +84,11 @@ export function initComments(): () => void {
   const container = document.getElementById("comments");
   if (!container) return () => {};
 
-  mountGiscus(container, currentTheme());
+  mountGiscus(container, currentTheme(container));
 
-  const observer = new MutationObserver(() => syncTheme(currentTheme()));
+  const observer = new MutationObserver(() =>
+    syncTheme(currentTheme(container))
+  );
   observer.observe(document.documentElement, {
     attributes: true,
     attributeFilter: ["data-theme"],

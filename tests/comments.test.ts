@@ -17,7 +17,7 @@ vi.mock("@/config", () => ({
     get comments() {
       return mocks.config.comments;
     },
-    site: { lang: "ko" },
+    site: { lang: "ko", url: "https://example.test/" },
   },
 }));
 
@@ -55,6 +55,19 @@ describe("Comments component", () => {
     expect(html).toContain('data-category-id="DIC_test"');
     expect(html).toContain('data-mapping="pathname"');
     expect(html).toContain('data-reactions-enabled="1"');
+  });
+
+  it("points the theme attributes at absolute stylesheet URLs", async () => {
+    // giscus fetches these server-side, so a site-relative path cannot work.
+    mocks.config.comments = giscus;
+    const html = await render();
+
+    expect(html).toContain(
+      'data-theme-light="https://example.test/giscus/light.css"'
+    );
+    expect(html).toContain(
+      'data-theme-dark="https://example.test/giscus/dark.css"'
+    );
   });
 
   it("ships an empty container so the script owns the giscus element", async () => {
@@ -152,11 +165,38 @@ afterEach(() => {
 });
 
 describe("comments script", () => {
-  it("reads the theme theme.ts wrote on the document element", () => {
-    expect(currentTheme()).toBe("light");
+  it("picks the theme stylesheet matching what theme.ts wrote", () => {
+    container.setAttribute("data-theme-light", "https://site/giscus/light.css");
+    container.setAttribute("data-theme-dark", "https://site/giscus/dark.css");
+
+    expect(currentTheme(asElement(container))).toBe(
+      "https://site/giscus/light.css"
+    );
 
     root.setAttribute("data-theme", "dark");
-    expect(currentTheme()).toBe("dark");
+    expect(currentTheme(asElement(container))).toBe(
+      "https://site/giscus/dark.css"
+    );
+  });
+
+  it("falls back to the built-in themes when no stylesheet is supplied", () => {
+    // Losing the custom look beats losing the whole widget.
+    expect(currentTheme(asElement(container))).toBe("light");
+
+    root.setAttribute("data-theme", "dark");
+    expect(currentTheme(asElement(container))).toBe("dark");
+  });
+
+  it("does not forward the theme URLs to giscus as settings", () => {
+    // They are ours; giscus only understands the resolved data-theme.
+    container.setAttribute("data-theme-light", "https://site/giscus/light.css");
+    mountGiscus(asElement(container), "https://site/giscus/light.css");
+    const script = container.children[0] as FakeScript;
+
+    expect(script.getAttribute("data-theme-light")).toBeNull();
+    expect(script.getAttribute("data-theme")).toBe(
+      "https://site/giscus/light.css"
+    );
   });
 
   it("forwards the container's settings onto the injected script", () => {

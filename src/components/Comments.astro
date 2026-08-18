@@ -13,6 +13,13 @@ import { useTranslations } from "@/i18n";
 
 const comments = config.comments;
 const t = useTranslations(Astro.currentLocale ?? config.site.lang);
+
+// 테마는 프리셋 이름이 아니라 CSS 파일 URL로 넘깁니다(public/giscus/). giscus
+// 서버가 읽어가야 하므로 배포처를 가리키는 절대 URL이어야 합니다. 덕분에 개발
+// 서버에서도 배포된 테마가 그대로 보입니다 — 대신 테마를 고치면 배포한 뒤에야
+// 반영됩니다.
+const themeUrl = (name: string) =>
+  new URL(`giscus/${name}.css`, config.site.url).href;
 ---
 
 {
@@ -30,6 +37,8 @@ const t = useTranslations(Astro.currentLocale ?? config.site.lang);
         data-emit-metadata="0"
         data-input-position="bottom"
         data-lang={comments.lang}
+        data-theme-light={themeUrl("light")}
+        data-theme-dark={themeUrl("dark")}
       />
     </section>
   )
