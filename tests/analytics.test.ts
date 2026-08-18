@@ -1,5 +1,5 @@
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import Analytics from "@/components/Analytics.astro";
 
 // The component reads the resolved config, so the mock exposes a single site
@@ -17,11 +17,26 @@ const render = async () => {
 
 beforeEach(() => {
   delete mocks.site.gaMeasurementId;
+  // Vitest runs as dev; the component is meant to stay silent there, so the
+  // cases below opt into a production render explicitly.
+  vi.stubEnv("DEV", false);
+});
+
+afterEach(() => {
+  vi.unstubAllEnvs();
 });
 
 describe("Analytics", () => {
   it("renders nothing when no measurement ID is configured", async () => {
-    // Local dev and CI builds leave the ID unset and must not report to GA.
+    expect((await render()).trim()).toBe("");
+  });
+
+  it("stays silent on the dev server even with an ID configured", async () => {
+    // The ID lives in the committed config, so it resolves locally too.
+    // Without this guard every local reload would land in the real stats.
+    mocks.site.gaMeasurementId = "G-TEST12345";
+    vi.stubEnv("DEV", true);
+
     expect((await render()).trim()).toBe("");
   });
 

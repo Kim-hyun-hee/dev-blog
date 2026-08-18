@@ -14,7 +14,11 @@
 import GtagSnippet from "./GtagSnippet.astro";
 import config from "@/config";
 
-const gaId = config.site.gaMeasurementId;
+// 개발 서버에서는 내보내지 않는다. 측정 ID가 설정 파일에 있어 로컬에서도
+// 값이 잡히는데, 그대로 두면 개발하며 새로고침하는 것마다 실제 통계에
+// 방문자로 쌓인다. 판단 기준은 postFilter.ts 와 같은 import.meta.env 다.
+const enabled = Boolean(config.site.gaMeasurementId) && !import.meta.env.DEV;
+const gaId = enabled ? config.site.gaMeasurementId : undefined;
 ---
 
 {gaId && <GtagSnippet gaId={gaId} />}
