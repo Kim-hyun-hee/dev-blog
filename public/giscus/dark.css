@@ -20,10 +20,14 @@ main {
   --site-muted-fg: #a3a3a3;
   --site-border: #333333;
 
-  /* ── 파생: 포인트 색을 배경에 섞은 단계 ──────────────────────
-     어두운 배경에서는 같은 비율도 더 강하게 보이므로 라이트보다 낮게
-     잡습니다. */
-  --tint-surface: color-mix(in srgb, var(--site-accent) 7%, var(--site-bg));
+  /* ── 표면과 반응 단계 ────────────────────────────────────────
+     라이트와 달리 표면은 무채색입니다. 다크에서 포인트 색을 넓은 면에 섞으면
+     살구빛이 검정과 만나 탁한 갈색이 됩니다. CLAUDE.md 가 경고하는 바로 그
+     증상이라("회색에 색이 섞여 화면 전체가 은은하게 물들면 눈이 피로하다")
+     표면은 theme.css 의 다크 --muted 를 그대로 쓰고, 색은 반응하는 곳에만
+     남깁니다. 라이트에서는 섞은 색이 거의 흰색이라 같은 문제가 없어 틴트를
+     그대로 둡니다 — 두 파일이 다른 것은 실수가 아닙니다. */
+  --surface: #212121;
   --tint-hover: color-mix(in srgb, var(--site-accent) 14%, var(--site-bg));
   --tint-active: color-mix(in srgb, var(--site-accent) 22%, var(--site-bg));
   --tint-border: color-mix(in srgb, var(--site-accent) 34%, var(--site-bg));
@@ -31,8 +35,8 @@ main {
   /* ── 바탕과 글자 ────────────────────────────────────────────── */
   --color-canvas-default: var(--site-bg);
   --color-canvas-overlay: var(--site-bg);
-  --color-canvas-subtle: var(--tint-surface);
-  --color-canvas-inset: var(--tint-surface);
+  --color-canvas-subtle: var(--surface);
+  --color-canvas-inset: var(--surface);
   --color-fg-default: var(--site-fg);
   --color-fg-muted: var(--site-muted-fg);
   --color-fg-subtle: var(--site-muted-fg);
@@ -40,17 +44,17 @@ main {
   /* ── 테두리 ─────────────────────────────────────────────────── */
   --color-border-default: var(--site-border);
   --color-border-muted: var(--site-border);
-  --color-neutral-muted: var(--tint-surface);
+  --color-neutral-muted: var(--surface);
 
   /* ── 링크와 포인트 ──────────────────────────────────────────── */
   --color-accent-fg: var(--site-link);
   --color-accent-emphasis: var(--site-accent);
   --color-accent-muted: color-mix(in srgb, var(--site-accent) 40%, transparent);
-  --color-accent-subtle: var(--tint-surface);
+  --color-accent-subtle: var(--surface);
 
   /* ── 보조 버튼 ──────────────────────────────────────────────── */
   --color-btn-text: var(--site-muted-fg);
-  --color-btn-bg: var(--tint-surface);
+  --color-btn-bg: var(--surface);
   --color-btn-border: var(--site-border);
   --color-btn-shadow: 0 0 transparent;
   --color-btn-inset-shadow: 0 0 transparent;
@@ -75,7 +79,7 @@ main {
   --color-btn-primary-disabled-border: var(--site-border);
 
   /* ── 정렬 토글, 목록 항목, 반응 버튼 ────────────────────────── */
-  --color-segmented-control-bg: var(--tint-surface);
+  --color-segmented-control-bg: var(--surface);
   --color-segmented-control-button-bg: var(--site-bg);
   --color-segmented-control-button-selected-border: var(--site-accent);
   --color-action-list-item-default-hover-bg: var(--tint-hover);
