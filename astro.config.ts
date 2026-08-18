@@ -121,6 +121,13 @@ export default defineConfig({
         context: "client",
         optional: true,
       }),
+      // [CUSTOM] GA4 측정 ID. 비워 두면 측정 스크립트가 아예 렌더되지 않아
+      // 로컬 개발과 CI 빌드는 GA로 아무것도 보내지 않는다.
+      PUBLIC_GA_MEASUREMENT_ID: envField.string({
+        access: "public",
+        context: "client",
+        optional: true,
+      }),
     },
   },
   experimental: {

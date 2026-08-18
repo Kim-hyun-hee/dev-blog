@@ -5,6 +5,7 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 import { resolveDefaultOgImagePath } from "@/utils/resolveDefaultOgImagePath";
 import { getAssetPath } from "@/utils/withBase";
 import { useTranslations } from "@/i18n";
+import Analytics from "@/components/Analytics.astro";
 import config from "@/config";
 import "@/styles/global.css";
 
@@ -116,6 +117,9 @@ const rssHref = getRelativeLocaleUrl(
         window.__theme = { value: theme };
       })();
     </script>
+
+    {/* Renders nothing until a GA4 measurement ID is configured. */}
+    <Analytics />
 
     <ClientRouter />
   </head>

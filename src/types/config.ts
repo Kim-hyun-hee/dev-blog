@@ -21,6 +21,14 @@ interface SiteConfig {
   dir?: "ltr" | "rtl" | "auto";
   /** Google Search Console verification meta tag value */
   googleVerification?: string;
+  /**
+   * Google Analytics 4 measurement ID, e.g. "G-XXXXXXXXXX". Public by design —
+   * it ships in the HTML. Collection only: the site never displays the numbers,
+   * which would require the GA4 Data API and therefore a server.
+   *
+   * Leave unset to disable GA entirely.
+   */
+  gaMeasurementId?: string;
 }
 
 interface PostsConfig {
@@ -99,7 +107,10 @@ type ResolvedSiteConfig = Required<
     | "ogImage"
   >
 > &
-  Pick<SiteConfig, "role" | "profile" | "googleVerification">;
+  Pick<
+    SiteConfig,
+    "role" | "profile" | "googleVerification" | "gaMeasurementId"
+  >;
 
 export interface ResolvedAstroPaperConfig {
   site: ResolvedSiteConfig;

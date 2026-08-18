@@ -1,0 +1,53 @@
+---
+/**
+ * [CUSTOM] 업스트림에 없는 컴포넌트입니다.
+ *
+ * gtag.js 로더와 부트스트랩. 켤지 말지는 Analytics.astro 가 정하므로 여기서는
+ * 측정 ID가 있다고 보고 태그만 냅니다.
+ *
+ * 이 스크립트들이 Analytics.astro 안에 직접 있지 않고 별도 컴포넌트로 떨어져
+ * 있는 이유: prettier-plugin-astro 는 템플릿 표현식 `{...}` 안에 놓인
+ * `<script>` 의 본문을 JSX 자식으로 읽어, `function gtag() {` 의 여는 중괄호를
+ * 표현식 시작으로 오인하고 파싱에 실패합니다. Astro 컴파일러는 통과시키므로
+ * 화면은 멀쩡하고 `pnpm format` 만 깨집니다. 최상위에 두면 문제가 없어서
+ * 조건부를 부모로 올렸습니다. 다시 합치지 마세요.
+ */
+type Props = {
+  gaId: string;
+};
+
+const { gaId } = Astro.props;
+---
+
+<script
+  is:inline
+  async
+  src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+
+<script is:inline define:vars={{ gaId }}>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    window.dataLayer.push(arguments);
+  }
+  window.gtag = gtag;
+  gtag("js", new Date());
+
+  // ClientRouter가 페이지를 새로 읽지 않고 DOM만 갈아끼우므로, gtag이 스스로
+  // 보내는 page_view는 방문의 첫 페이지에서만 발생한다. 꺼 두고 아래에서
+  // 이동마다 직접 보낸다.
+  gtag("config", gaId, { send_page_view: false });
+
+  // astro:page-load는 첫 로드에도, 이후 이동마다에도 발생한다. Astro는 내용이
+  // 같은 head 스크립트를 교체 시 유지하므로 이 블록은 다시 실행되지 않지만,
+  // 만약 실행되면 이동 한 번이 두 번으로 세진다. 그 실패는 화면에 드러나지
+  // 않으므로 명시적으로 막는다.
+  if (!window.__gaPageView) {
+    window.__gaPageView = true;
+    document.addEventListener("astro:page-load", () => {
+      window.gtag("event", "page_view", {
+        page_location: window.location.href,
+        page_title: document.title,
+      });
+    });
+  }
+</script>

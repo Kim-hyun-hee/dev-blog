@@ -1,0 +1,20 @@
+---
+/**
+ * [CUSTOM] 업스트림에 없는 컴포넌트입니다.
+ *
+ * Google Analytics 4. 수집만 합니다 — 사이트 어디에도 숫자를 찍지 않습니다.
+ * 화면에 표시하려면 GA4 Data API를 불러야 하고, 그건 서비스 계정 개인키가
+ * 필요해 서버가 있어야 합니다. 이 저장소는 정적 빌드를 유지하므로 하지
+ * 않습니다. 숫자는 analytics.google.com 에서 봅니다.
+ *
+ * 측정 ID가 없으면 아무것도 렌더하지 않습니다. 로컬 개발과 CI 빌드는 ID를
+ * 비워 두므로 GA로 아무것도 보내지 않습니다. 값이 어떻게 정해지는지는
+ * src/config.ts 를, 스크립트 본문은 GtagSnippet.astro 를 보세요.
+ */
+import GtagSnippet from "./GtagSnippet.astro";
+import config from "@/config";
+
+const gaId = config.site.gaMeasurementId;
+---
+
+{gaId && <GtagSnippet gaId={gaId} />}
