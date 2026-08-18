@@ -7,11 +7,11 @@
  * 넘기는 수밖에 없습니다.
  *
  * 기본 테마를 통째로 베끼지 않고 @import 로 불러온 뒤 필요한 변수만 덮어씁니다.
- * 그래야 이 파일이 "무엇을 바꿨는지"의 목록으로 읽히고, 원본이 고쳐지면 그
- * 수정이 따라옵니다. 변수 이름은 원본이 쓰는 것을 그대로 씁니다.
+ * 그래야 이 파일이 "무엇을 바꿨는지"의 목록으로 읽힙니다.
  *
- * 값의 정본은 src/styles/theme.css 입니다. 팔레트를 바꾸면 이 파일도 함께
- * 고쳐야 합니다 — iframe 너머라 자동으로 따라오지 않습니다.
+ * 아래 --site-* 값이 이 파일의 유일한 색 출처입니다. giscus 변수는 전부 거기서
+ * 나오므로, 팔레트가 바뀌면 그 블록만 고치면 됩니다. 값의 정본은
+ * src/styles/theme.css 이고, iframe 너머라 자동으로 따라오지 않습니다.
  *
  * 이 파일은 giscus 서버가 읽어가므로 CORS 헤더가 필요합니다. vercel.json 참고. */
 
@@ -19,63 +19,83 @@
 @import url("https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/variable/woff2/SUIT-Variable.css");
 
 main {
-  /* 바탕과 글자 */
-  --color-canvas-default: #ffffff;
-  --color-canvas-overlay: #ffffff;
-  --color-canvas-subtle: #f5f5f5;
-  --color-canvas-inset: #f5f5f5;
-  --color-fg-default: #262626;
-  --color-fg-muted: #666666;
-  --color-fg-subtle: #666666;
+  /* ── 사이트 팔레트 (theme.css 라이트 값) ─────────────────────── */
+  --site-bg: #ffffff;
+  --site-fg: #262626;
+  --site-accent: #8387d3;
+  --site-link: #6266c0;
+  --site-link-hover: #4b4e9e;
+  --site-muted-fg: #666666;
+  --site-border: #e5e5e5;
 
-  /* 테두리 — 원본은 파랑이 섞인 회색이라 눈에 띕니다. 무채색으로 맞춥니다. */
-  --color-border-default: #e5e5e5;
-  --color-border-muted: #e5e5e5;
-  --color-neutral-muted: #f5f5f5;
+  /* ── 파생: 포인트 색을 배경에 섞은 단계 ──────────────────────
+     원본은 이 자리에 무채색 회색(#f6f8fa)을 씁니다. 그 회색이 넓은 면을
+     채우면서 가장 먼저 눈에 띄는 이질감이었습니다. theme.css 가 포인트 색의
+     쓰임으로 "배경 틴트"를 허용하므로, 회색 대신 같은 색을 옅게 깝니다.
+     표면과 hover가 같은 색이면 반응이 안 보이므로 단계를 나눕니다. */
+  --tint-surface: color-mix(in srgb, var(--site-accent) 5%, var(--site-bg));
+  --tint-hover: color-mix(in srgb, var(--site-accent) 11%, var(--site-bg));
+  --tint-active: color-mix(in srgb, var(--site-accent) 18%, var(--site-bg));
+  --tint-border: color-mix(in srgb, var(--site-accent) 28%, var(--site-bg));
 
-  /* 링크와 포인트. 원본의 #0969da 파랑이 가장 큰 이질감이었습니다. */
-  --color-accent-fg: #6266c0;
-  --color-accent-emphasis: #8387d3;
-  --color-accent-muted: rgb(131 135 211 / 40%);
-  --color-accent-subtle: #f4f5fe;
+  /* ── 바탕과 글자 ────────────────────────────────────────────── */
+  --color-canvas-default: var(--site-bg);
+  --color-canvas-overlay: var(--site-bg);
+  --color-canvas-subtle: var(--tint-surface);
+  --color-canvas-inset: var(--tint-surface);
+  --color-fg-default: var(--site-fg);
+  --color-fg-muted: var(--site-muted-fg);
+  --color-fg-subtle: var(--site-muted-fg);
 
-  /* 보조 버튼. 태그 칩(Tag.astro)의 문법을 따릅니다 — 회색 판에 흐린 글씨로
-     두고, hover에서 포인트 틴트를 깔면서 글씨를 진하게 올립니다. */
-  --color-btn-text: #666666;
-  --color-btn-bg: #f5f5f5;
-  --color-btn-border: #e5e5e5;
+  /* ── 테두리 — 원본은 파랑이 섞인 회색이라 눈에 띕니다 ────────── */
+  --color-border-default: var(--site-border);
+  --color-border-muted: var(--site-border);
+  --color-neutral-muted: var(--tint-surface);
+
+  /* ── 링크와 포인트. 원본의 #0969da 파랑이 가장 큰 이질감이었습니다 ── */
+  --color-accent-fg: var(--site-link);
+  --color-accent-emphasis: var(--site-accent);
+  --color-accent-muted: color-mix(in srgb, var(--site-accent) 40%, transparent);
+  --color-accent-subtle: var(--tint-surface);
+
+  /* ── 보조 버튼. 태그 칩(Tag.astro)의 문법을 따릅니다 — 조용한 판에
+     흐린 글씨로 두고, hover에서 틴트를 올리며 글씨를 진하게 합니다. ── */
+  --color-btn-text: var(--site-muted-fg);
+  --color-btn-bg: var(--tint-surface);
+  --color-btn-border: var(--site-border);
   --color-btn-shadow: 0 0 transparent;
   --color-btn-inset-shadow: 0 0 transparent;
-  --color-btn-hover-bg: #f4f5fe;
-  --color-btn-hover-border: #dcdef7;
-  --color-btn-active-bg: #e9eafc;
-  --color-btn-active-border: #c9cbee;
-  --color-btn-selected-bg: #f4f5fe;
+  --color-btn-hover-bg: var(--tint-hover);
+  --color-btn-hover-border: var(--tint-border);
+  --color-btn-active-bg: var(--tint-active);
+  --color-btn-active-border: var(--tint-border);
+  --color-btn-selected-bg: var(--tint-hover);
 
-  /* 댓글 등록 버튼. 원본은 #1f883d 초록을 꽉 채웁니다.
+  /* ── 댓글 등록 버튼. 원본은 #1f883d 초록을 꽉 채웁니다.
      포인트 색을 판 전체에 칠하지 않습니다 — theme.css 의 원칙대로 포인트는
-     "표시"에만 씁니다. 옅은 틴트 바탕에 포인트 색 글씨와 테두리로 두면 글씨와
-     바탕이 같은 색 계열이라 서로 부딪히지 않으면서도 주목도가 남습니다. */
-  --color-btn-primary-text: #6266c0;
-  --color-btn-primary-bg: #f4f5fe;
-  --color-btn-primary-border: #8387d3;
+     "표시"에만 씁니다. 글씨와 바탕이 같은 색 계열이라 부딪히지 않습니다.
+     못 누르는 상태는 회색으로 확실히 빼서, 쓰기 시작하면 색이 도는 것이
+     상태 변화로 읽히게 합니다. ── */
+  --color-btn-primary-text: var(--site-link);
+  --color-btn-primary-bg: var(--tint-hover);
+  --color-btn-primary-border: var(--site-accent);
   --color-btn-primary-shadow: 0 0 transparent;
   --color-btn-primary-inset-shadow: 0 0 transparent;
-  --color-btn-primary-hover-bg: #e9eafc;
-  --color-btn-primary-hover-border: #6266c0;
-  --color-btn-primary-selected-bg: #dcdef7;
+  --color-btn-primary-hover-bg: var(--tint-active);
+  --color-btn-primary-hover-border: var(--site-link);
+  --color-btn-primary-selected-bg: var(--tint-active);
   --color-btn-primary-selected-shadow: 0 0 transparent;
-  --color-btn-primary-disabled-text: #a5a7d8;
-  --color-btn-primary-disabled-bg: #fafaff;
-  --color-btn-primary-disabled-border: #e9eafc;
+  --color-btn-primary-disabled-text: #a3a3a3;
+  --color-btn-primary-disabled-bg: transparent;
+  --color-btn-primary-disabled-border: var(--site-border);
 
-  /* 정렬 토글, 목록 항목, 반응 버튼. hover 틴트는 위 버튼과 같은 색입니다. */
-  --color-segmented-control-bg: #f5f5f5;
-  --color-segmented-control-button-bg: #ffffff;
-  --color-segmented-control-button-selected-border: #8387d3;
-  --color-action-list-item-default-hover-bg: #f4f5fe;
-  --color-social-reaction-bg-hover: #f4f5fe;
-  --color-social-reaction-bg-reacted-hover: #e9eafc;
+  /* ── 정렬 토글, 목록 항목, 반응 버튼 ────────────────────────── */
+  --color-segmented-control-bg: var(--tint-surface);
+  --color-segmented-control-button-bg: var(--site-bg);
+  --color-segmented-control-button-selected-border: var(--site-accent);
+  --color-action-list-item-default-hover-bg: var(--tint-hover);
+  --color-social-reaction-bg-hover: var(--tint-hover);
+  --color-social-reaction-bg-reacted-hover: var(--tint-active);
 
   --color-primer-shadow-inset: 0 0 transparent;
 
@@ -96,8 +116,8 @@ main pre {
    4px 띄움, hover에서 제 색을 찾습니다.
 
    text-decoration-line 은 건드리지 않습니다. giscus에는 밑줄이 없어야 하는
-   링크(작성자 이름, 시각, 버튼처럼 생긴 링크)가 섞여 있는데, 여기서 밑줄을
-   켜면 그것들에까지 그어집니다. */
+   링크(작성자 이름, 버튼처럼 생긴 링크)가 섞여 있는데, 여기서 밑줄을 켜면
+   그것들에까지 그어집니다. */
 main a {
   text-underline-offset: 4px;
   text-decoration-thickness: 1px;
@@ -136,11 +156,9 @@ main button {
   gap: 0.5rem;
 }
 
-/* 입력창은 바탕을 칠하지 않고 테두리로만 구분합니다.
-   한때 RelatedBox 처럼 옅은 회색 판을 깔았는데, 그 상자들은 "읽는" 상자라
-   괜찮지만 입력창은 글을 쓰는 면이라 회색이 깔리면 탁해 보였습니다. 배경을
-   페이지와 통일하면 글 쓰는 면이 가장 깨끗한 면이 되고, 상자의 머리 역할은
-   위쪽 탭 줄(--color-canvas-subtle)이 대신합니다. */
+/* 입력창은 바탕을 칠하지 않고 테두리로만 구분합니다. 글을 쓰는 면이라
+   화면에서 가장 깨끗한 면이어야 합니다. 상자의 머리 역할은 위쪽 탭 줄이
+   대신합니다. */
 .gsc-comment-box {
   border-radius: 0.5rem;
 }
